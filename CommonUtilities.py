@@ -5,6 +5,7 @@ assignment.
 """
 import decimal
 
+from Department import Department
 from PriceChange import PriceChange
 from Utilities import Utilities
 from ConstraintUtilities import select_general, unique_general, prompt_for_date
@@ -21,6 +22,10 @@ def select_order() -> Order:
 
 def select_product() -> Product:
     return select_general(Product)
+
+
+def select_department() -> Department:
+    return select_general(Department)
 
 
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
@@ -149,6 +154,49 @@ def add_product():
                 print(Utilities.print_exception(e))
 
 
+def add_department():
+    success: bool = False
+    new_product = None
+    while not success:
+        name = input('Enter Department Name --> ')
+        abbreviation = input('Enter the Department Abbreviation --> ')
+        chair_name = input('Enter Chair Name --> ')
+        building = prompt_for_enum('Select building:', Department, 'building')
+        office = int(input('Enter Office --> '))
+        description = input('Enter Department Description --> ')
+        new_department = Department(name,
+                                    abbreviation,
+                                    chair_name, building, office, description)
+
+        violated_constraints = unique_general(new_department)
+        if len(violated_constraints) > 0:
+            for violated_constraint in violated_constraints:
+                print('Your input values violated constraint: ', violated_constraint)
+            print('try again')
+        else:
+            try:
+                new_department.save()
+                success = True
+            except Exception as e:
+                print('Errors storing the new department:')
+                print(Utilities.print_exception(e))
+
+
+def delete_department():
+    department = select_department()
+
+    if department.majors or department.courses:
+        print("Error: This department cannot be deleted because it has associated majors or courses.")
+        return
+
+    try:
+        department.delete()
+        print(f"Department {department.name} has been successfully deleted.")
+    except Exception as e:
+        print('Errors deleting the department:')
+        print(Utilities.print_exception(e))
+
+
 def delete_product():
     """
     Delete an existing product from the database.
@@ -185,8 +233,7 @@ def update_product():
             print('Attempted status change failed because:')
             print(VE)
 
+
 def list_order_item():
     order = select_order()
     print(order)
-
-
