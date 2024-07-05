@@ -6,6 +6,7 @@ assignment.
 import decimal
 
 from Department import Department
+from Course import Course
 from PriceChange import PriceChange
 from Utilities import Utilities
 from ConstraintUtilities import select_general, unique_general, prompt_for_date
@@ -27,6 +28,8 @@ def select_product() -> Product:
 def select_department() -> Department:
     return select_general(Department)
 
+def select_course() -> Course:
+    return select_general(Course)
 
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
     """
@@ -195,6 +198,45 @@ def delete_department():
     except Exception as e:
         print('Errors deleting the department:')
         print(Utilities.print_exception(e))
+
+# add a course to an existing department
+def add_course():
+    success: bool = False
+    new_course: Course
+    department: Department
+    while not success:
+        department = select_department() # prompt the user for a department
+        course_number = int(input('Enter Course Number --> '))
+        course_name = input('Enter Course Name --> ')
+        description = input('Enter Course Description --> ')
+        units = int(input('Enter number of units for this course --> '))
+        # create a new course
+        new_course = Course(department.abbreviation, course_number, course_name, description, units)
+        # check unique
+        violated_constraints = unique_general(new_course)
+        if len(violated_constraints) > 0:
+            for violated_constraint in violated_constraints:
+                print('Your input values violated constraint: ', violated_constraint)
+            print('Try again')
+        else:
+            try:
+                new_course.save()
+                department.add_course(new_course) # Add this Course to the Department's MongoDB list of items.
+                department.save()
+                success = True
+            except Exception as e:
+                print('Exception trying to add the new course:')
+                print(Utilities.print_exception(e))
+# delete a course from a department
+def delete_course():
+    department = select_department()
+    all_courses = department.courses    # the list of courses in this department
+    menu_courses: [Option] = []
+    for course in all_courses:
+        menu_courses.append(Option(course.__str__(), course))
+    department.remove_course(Menu('Course Menu',
+                                  'Choose which order item to remov', menu_courses).menu_prompt())
+    department.save()
 
 
 def delete_product():

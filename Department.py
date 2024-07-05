@@ -45,3 +45,16 @@ class Department(Document):
         return (f' Abbreviation: {self.abbreviation}, Name: {self.name}, Location: {self.building} {self.office}, '
                 f'Description: {self.description},')
 
+    # added:
+    # add a course to the department
+    def add_course(self, course):
+        for already_added_course in self.courses:
+            if course.equals(already_added_course):
+                return # don't add course if it already exists
+        self.courses.append(course)
+    # remove a course from the department
+    def remove_course(self, course):
+        for available_course in self.courses:
+            if course.equals(available_course):
+                self.courses.remove(available_course)
+                returna

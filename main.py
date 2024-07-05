@@ -145,6 +145,13 @@ def list_product():
 def list_order_item():
     CU.list_order_item()
 
+# added course functions
+def add_course():
+    CU.add_course()
+
+def delete_course():
+    CU.delete_course()
+
 if __name__ == '__main__':
     print('Starting in main.')
     monitoring.register(CommandLogger())
