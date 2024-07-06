@@ -6,6 +6,7 @@ assignment.
 import decimal
 
 from Department import Department
+from Student import Student
 from Course import Course
 from Major import Major
 from PriceChange import PriceChange
@@ -32,6 +33,13 @@ def select_department() -> Department:
 
 def select_major() -> Major:
     return select_general(Major)
+
+def select_student() -> Student:
+    return select_general(Student)
+
+def select_course() -> Course:
+    return select_general(Course)
+
 
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
     """
@@ -126,7 +134,6 @@ def delete_order():
     # Now that all the items on the order are removed, we can safely remove the order itself.
     order.delete()
 
-
 def add_product():
     """
     Create a new Product instance.
@@ -157,6 +164,41 @@ def add_product():
             except Exception as e:
                 print('Errors storing the new order:')
                 print(Utilities.print_exception(e))
+
+def add_student():
+    success: bool = False
+    new_student = None
+    while not success:
+        firstName = input('Enter Student First Name --> ')
+        lastName = input('Enter Student Last Name --> ')
+        email = input('Enter Student Email --> ')
+        new_student = Student(firstName, lastName, email)
+
+        violated_constraints = unique_general(new_student)
+        if len(violated_constraints) > 0:
+            for violated_constraint in violated_constraints:
+                print('Your input values violated constraint: ', violated_constraint)
+            print('try again')
+        else:
+            try:
+                new_student.save()
+                success = True
+            except Exception as e:
+                print('Errors storing the new student:')
+                print(Utilities.print_exception(e))
+
+def delete_student():
+    student = select_student()
+    if student.enrollments or student.studentMajors:
+        print("Error: This department cannot be deleted because it has associated majors or courses.")
+        return
+
+    try:
+        student.delete()
+        print(f"{student.name} has been successfully deleted.")
+    except Exception as e:
+        print('Errors deleting the student:')
+        print(Utilities.print_exception(e))
 
 
 def add_department():
@@ -280,7 +322,6 @@ def list_course():
     all_courses = department.courses    # all courses in that department
     for course in all_courses:
         print(course)
-
 
 
 def delete_product():
