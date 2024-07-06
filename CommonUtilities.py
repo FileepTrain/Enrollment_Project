@@ -7,14 +7,10 @@ import decimal
 
 from Department import Department
 from Course import Course
-from PriceChange import PriceChange
 from Utilities import Utilities
 from ConstraintUtilities import select_general, unique_general, prompt_for_date
-from Order import Order
-from StatusChange import StatusChange
 from Menu import Menu
 from Option import Option
-from Product import Product
 
 
 def select_order() -> Order:
@@ -233,16 +229,16 @@ def delete_course():
     for course in all_courses:
         menu_courses.append(Option(course.__str__(), course))
     department.remove_course(Menu('Course Menu',
-                                  'Choose which order item to remove', menu_courses).menu_prompt())
+                                  'Choose which course to remove', menu_courses).menu_prompt())
     department.save()
+
 # list all courses form a specific department:
 def list_course():
     department = select_department()
     all_courses = department.courses    # all courses in that department
     for course in all_courses:
         print(course)
-
-
+ 
 
 def delete_product():
     """
@@ -257,30 +253,3 @@ def delete_product():
 
     product.delete()
 
-
-def update_product():
-    """
-    Change the status of an existing order by adding another element to the status vector of the order.
-    :return: None
-    """
-    success: bool = False
-    # "Declare" the order variable, more for cosmetics than anything else.
-    product: Product
-    while not success:
-        product = select_product()  # Find an order to modify.
-        price_change_date = prompt_for_date('Date and time of the price change: ')
-        new_price = decimal.Decimal(input('Enter the new price --> '))
-        try:
-            price_change = PriceChange(new_price, price_change_date)
-            product.change_price(price_change)
-            product.buyPrice = new_price
-            product.save()
-            success = True
-        except ValueError as VE:
-            print('Attempted status change failed because:')
-            print(VE)
-
-
-def list_order_item():
-    order = select_order()
-    print(order)
