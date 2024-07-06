@@ -1,6 +1,4 @@
 from mongoengine import *
-from StudentMajor import StudentMajor
-from Enrollment import Enrollment
 
 
 class Student(Document):
@@ -49,7 +47,7 @@ class Student(Document):
                 studentMajor.delete(studentMajor)
                 return
 
-    def __init__(self, lastName: str, firstName: str, email: str *args, **values):
+    def __init__(self, lastName: str, firstName: str, email: str, *args, **values):
         super().__init__(*args, **values)
         if self.enrollments is None:
             self.enrollments = []  # initialize to no enrollments.

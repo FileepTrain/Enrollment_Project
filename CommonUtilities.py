@@ -6,26 +6,13 @@ assignment.
 import decimal
 
 from Department import Department
-from Student import Student
 from Course import Course
 from Major import Major
-from PriceChange import PriceChange
 from Student import Student
 from Utilities import Utilities
 from ConstraintUtilities import select_general, unique_general, prompt_for_date
-from Order import Order
-from StatusChange import StatusChange
 from Menu import Menu
 from Option import Option
-from Product import Product
-
-
-def select_order() -> Order:
-    return select_general(Order)
-
-
-def select_product() -> Product:
-    return select_general(Product)
 
 
 def select_department() -> Department:
@@ -65,105 +52,6 @@ def prompt_for_enum(prompt: str, cls, attribute_name: str):
         raise ValueError(f'This attribute is not an enum: {attribute_name}')
 
 
-def add_order():
-    """
-    Create a new Order instance.
-    :return: None
-    """
-    success: bool = False
-    new_order = None
-    while not success:
-        order_date = prompt_for_date('Date and time of the order: ')
-        """This is sort of a hack.  The customer really should come from a Customer class, and the 
-        clerk who made the sale, but I'm trying to keep this simple to concentrate on relationships."""
-        new_order = Order(input('Customer name --> '),
-                          order_date,
-                          input('Clerk who made the sale --> '))
-        violated_constraints = unique_general(new_order)
-        if len(violated_constraints) > 0:
-            for violated_constraint in violated_constraints:
-                print('Your input values violated constraint: ', violated_constraint)
-            print('try again')
-        else:
-            # The first "stats change" is placing the order itself.
-            new_order.change_status(StatusChange(
-                prompt_for_enum('Select the status:', StatusChange, 'status'),
-                order_date))
-            try:
-                new_order.save()
-                success = True
-            except Exception as e:
-                print('Errors storing the new order:')
-                print(Utilities.print_exception(e))
-
-
-def update_order():
-    """
-    Change the status of an existing order by adding another element to the status vector of the order.
-    :return: None
-    """
-    success: bool = False
-    # "Declare" the order variable, more for cosmetics than anything else.
-    order: Order
-    while not success:
-        order = select_order()  # Find an order to modify.
-        status_change_date = prompt_for_date('Date and time of the status change: ')
-        new_status = prompt_for_enum('Select the status:', StatusChange, 'status')
-        try:
-            order.change_status(StatusChange(new_status, status_change_date))
-            order.save()
-            success = True
-        except ValueError as VE:
-            print('Attempted status change failed because:')
-            print(VE)
-
-
-def delete_order():
-    """
-    Delete an existing order from the database.
-    :return: None
-    """
-    order = select_order()  # prompt the user for an order to delete
-    items = order.orderItems  # retrieve the list of items in this order
-    for item in items:
-        """The reference from OrderItem back up to Order has a reverse_delete_rule of DENY, which 
-        is similar to the RESTRICT option on a relational foreign key constraint.  Which means that
-        if I try to delete the order and there are still any OrderItems depending on that order,
-        MongoEngine (not MongoDB) will throw an exception."""
-        item.delete()
-    # Now that all the items on the order are removed, we can safely remove the order itself.
-    order.delete()
-
-def add_product():
-    """
-    Create a new Product instance.
-    :return: None
-    """
-    success: bool = False
-    new_product = None
-    while not success:
-        product_code = input('Enter Product Code --> ')
-        product_name = input('Enter the product name --> ')
-        quantity_in_stock = int(input('Enter Quantity in Stock --> '))
-        product_description = input('Enter Product Description --> ')
-        product_price = decimal.Decimal(input('Enter Product Price --> '))
-        msrp = decimal.Decimal(input('Enter MSRP --> '))
-        new_product = Product(product_code,
-                              product_name,
-                              product_description, quantity_in_stock, product_price, msrp)
-
-        violated_constraints = unique_general(new_product)
-        if len(violated_constraints) > 0:
-            for violated_constraint in violated_constraints:
-                print('Your input values violated constraint: ', violated_constraint)
-            print('try again')
-        else:
-            try:
-                new_product.save()
-                success = True
-            except Exception as e:
-                print('Errors storing the new order:')
-                print(Utilities.print_exception(e))
 
 def add_student():
     success: bool = False
@@ -317,50 +205,9 @@ def delete_course():
                                   'Choose which order item to remove', menu_courses).menu_prompt())
     department.save()
 # list all courses form a specific department:
+
 def list_course():
     department = select_department()
     all_courses = department.courses    # all courses in that department
     for course in all_courses:
         print(course)
-
-
-def delete_product():
-    """
-    Delete an existing product from the database.
-    :return: None
-    """
-    product = select_product()  # prompt the user for an order to delete
-    orderItems = product.orderItems
-
-    for orderItem in orderItems:
-        orderItem.delete()
-
-    product.delete()
-
-
-def update_product():
-    """
-    Change the status of an existing order by adding another element to the status vector of the order.
-    :return: None
-    """
-    success: bool = False
-    # "Declare" the order variable, more for cosmetics than anything else.
-    product: Product
-    while not success:
-        product = select_product()  # Find an order to modify.
-        price_change_date = prompt_for_date('Date and time of the price change: ')
-        new_price = decimal.Decimal(input('Enter the new price --> '))
-        try:
-            price_change = PriceChange(new_price, price_change_date)
-            product.change_price(price_change)
-            product.buyPrice = new_price
-            product.save()
-            success = True
-        except ValueError as VE:
-            print('Attempted status change failed because:')
-            print(VE)
-
-
-def list_order_item():
-    order = select_order()
-    print(order)

@@ -2,7 +2,7 @@ import mongoengine
 from mongoengine import *
 from Student import Student
 from Section import Section
-
+from EnumValues import GradingType, MinimumSatisfactoryGrade
 
 class Enrollment(Document):
     departmentAbbreviation = StringField(db_field='department_abbreviation', max_length=6, required=True)
@@ -40,17 +40,17 @@ class Enrollment(Document):
 
 
 class CourseType(Enrollment):
-    type = EnumField(required=True, choices=['Pass/Fail', 'Letter Grade'])
-    minimum_satisfactory = EnumField(choices=['A', 'B', 'C', 'D', 'F'], db_field='min_satisfactory')
+    type = EnumField(GradingType, db_field='building', required=True)
+    minimumSatisfactory = EnumField(MinimumSatisfactoryGrade, db_field='minimum_satisfactory', required=True)
 
     def __init__(self, type, minimum_satisfactory, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.type = type
             if type == 'Letter Grade':
-                self.minimum_satisfactory = minimum_satisfactory
+                self.minimumSatisfactory = minimum_satisfactory
 
     def __str__(self):
         if self.type == 'Letter Grade':
-            return f'{super().__str__()} with a {self.type} grading system and a minimum satisfactory grade of {self.minimum_satisfactory}'
-        return f'{super().__str__()} with a {self.type} grading system
+            return f'{super().__str__()} with a {self.type} grading system and a minimum satisfactory grade of {self.minimumSatisfactory}'
+        return f'{super().__str__()} with a {self.type} grading system'
 

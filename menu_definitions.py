@@ -19,33 +19,37 @@ menu_main = Menu('main', 'Please select one of the following options:', [
 
 # options for adding a new instance
 add_select = Menu('add select', 'Which type of object do you want to add?:', [
-    Option("Orders", "add_order()"),
-    Option("Products", "add_product()"),
-    Option("Order Items", "add_order_item()"),
+    Option("Student", "add_student()"),
+    Option("Department", "add_department()"),
+    Option("Major", "add_major()"),
+    Option("Course", "add_course()"),
     Option("Exit", "pass")
 ])
 
 # options for deleting an existing instance
 delete_select = Menu('delete select', 'Which type of object do you want to delete?:', [
-    Option("Orders", "delete_order()"),
-    Option("Order Items", "delete_order_item()"),
-    Option("Products", "delete_product()"),
+    Option("Student", "delete_student()"),
+    Option("Department", "delete_department()"),
+    Option("Major", "delete_major()"),
+    Option("Course", "delete_course()"),
     Option("Exit", "pass")
 ])
 
 # options for listing the existing instances
 list_select = Menu('list select', 'Which type of object do you want to list?:', [
-    Option("Orders", "list_order()"),
-    Option("Order Items", "list_order_item()"),
-    Option("Products", "list_product()"),
+    Option("Student", "list_student()"),
+    Option("Department", "list_department()"),
+    Option("Major", "list_major()"),
+    Option("Course", "list_course()"),
     Option("Exit", "pass")
 ])
 
 # options for testing the select functions
 select_select = Menu('select select', 'Which type of object do you want to select:', [
-    Option("Order", "print(select_order())"),
-    Option("Order Item", "print(select_order_item())"),
-    Option("Product", "print(select_product())"),
+    Option("Student", "select_student()"),
+    Option("Department", "select_department()"),
+    Option("Major", "select_major()"),
+    Option("Course", "select_course()"),
     Option("Exit", "pass")
 ])
 

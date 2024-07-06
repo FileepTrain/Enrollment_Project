@@ -1,26 +1,27 @@
 import mongoengine
-from mongoengine import *
-from Major import Major
-from Student import Student
+from mongoengine import Document, StringField, DateTimeField, ReferenceField
 import datetime
 
+from Major import Major
+from Student import Student
 
 
 class StudentMajor(Document):
-    major = ReferenceField(Major, db_field='major', required=True, reverse_delete_rule=mongoengine.DENY)
-    student = ReferenceField(Student, db_field='student', required=True, reverse_delete_rule=mongoengine.DENY)
-    majorName = StringField(db_field='course_name', max_length=50, required=True)
+    major = ReferenceField(Student, required=True, reverse_delete_rule=mongoengine.DENY)
+    student = ReferenceField(Major, required=True, reverse_delete_rule=mongoengine.DENY)
+    majorName = StringField(db_field='major_name', max_length=50, required=True)
     studentLastName = StringField(db_field='student_last_name', max_length=50, required=True)
     studentFirstName = StringField(db_field='student_first_name', max_length=50, required=True)
-    declaration = DateTimeField(db_field='declaration',  required=True)
+    declaration = DateTimeField(db_field='declaration', required=True)
 
     # unique index
-    meta = {'collection': 'majors',
-            'indexes': [
-                {'unique': True, 'fields': ['major', 'student'], 'name': 'course_uk_01'},
-            ]}
+    meta = {
+        'collection': 'student_majors',
+        'indexes': [
+            {'unique': True, 'fields': ['major', 'student'], 'name': 'student_major_uk_01'},
+        ]
+    }
 
-    # initialization:
     def __init__(self, major: Major, student: Student, declaration: datetime, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.major = major
@@ -30,8 +31,13 @@ class StudentMajor(Document):
         self.studentFirstName = student.firstName
         self.declaration = declaration
 
-    # returns a string representation of course
     def __str__(self):
         return (f"Major: {self.majorName}, First: {self.studentFirstName}, Last: {self.studentLastName}, Declaration: {self.declaration}")
 
+    def get_major(self):
+        from Major import Major
+        return Major.objects(id=self.major).first()
 
+    def get_student(self):
+        from Student import Student
+        return Student.objects(id=self.student).first()

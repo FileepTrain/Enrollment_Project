@@ -14,3 +14,16 @@ class Building(Enum):
     HSCI = 'HSCI'
     NUR = 'NUR'
     VEC = 'VEC'
+
+
+class GradingType(Enum):
+    PASS_FAIL = 'Pass/Fail'
+    LETTER_GRADE = 'Letter Grade'
+
+
+class MinimumSatisfactoryGrade(Enum):
+    A = 'A'
+    B = 'B'
+    C = 'C'
+    D = 'D'
+    F = 'F'
