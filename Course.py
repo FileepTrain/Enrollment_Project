@@ -19,8 +19,8 @@ class Course(Document):
     # unique index
     meta = {'collection': 'courses',
             'indexes': [
-                {'unique': True, 'fields': ['department_abbreviation', 'course_number'], 'name': 'course_uk_01'},
-                {'unique': True, 'fields': ['department_abbreviation', 'course_name'], 'name': 'course_uk_02'}    
+                {'unique': True, 'fields': ['departmentAbbreviation', 'courseNumber'], 'name': 'course_uk_01'},
+                {'unique': True, 'fields': ['departmentAbbreviation', 'courseName'], 'name': 'course_uk_02'}
             ]}
     
     # initialization:
@@ -36,8 +36,7 @@ class Course(Document):
     
     # returns a string representation of course
     def __str__(self):
-        return (f"Department Abbreviation: {self.departmentAbbreviation}, Course Number: {self.courseNumber},
-                Course Name: {self.courseName}, Description: {self.description}, Units: {self.units}")
+        return (f"Department Abbreviation: {self.departmentAbbreviation}, Course Number: {self.courseNumber}, Course Name: {self.courseName}, Description: {self.description}, Units: {self.units}")
     # fucnction to check if 2 courses is the same
     def equals(self, other) -> bool:
         if self.departmentAbbreviation == other.departmentAbbreviation and self.courseNumber == other.courseNumber:

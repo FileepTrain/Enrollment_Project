@@ -7,7 +7,9 @@ import decimal
 
 from Department import Department
 from Course import Course
+from Major import Major
 from PriceChange import PriceChange
+from Student import Student
 from Utilities import Utilities
 from ConstraintUtilities import select_general, unique_general, prompt_for_date
 from Order import Order
@@ -28,6 +30,8 @@ def select_product() -> Product:
 def select_department() -> Department:
     return select_general(Department)
 
+def select_major() -> Major:
+    return select_general(Major)
 
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
     """
@@ -157,7 +161,7 @@ def add_product():
 
 def add_department():
     success: bool = False
-    new_product = None
+    new_department = None
     while not success:
         name = input('Enter Department Name --> ')
         abbreviation = input('Enter the Department Abbreviation --> ')
@@ -193,6 +197,41 @@ def delete_department():
     try:
         department.delete()
         print(f"Department {department.name} has been successfully deleted.")
+    except Exception as e:
+        print('Errors deleting the department:')
+        print(Utilities.print_exception(e))
+
+def add_major():
+    success: bool = False
+    new_major = None
+    while not success:
+        department = select_department()
+        name = input('Enter Major Name --> ')
+        description = input('Enter Major Description --> ')
+        new_major = Major(department, name, description)
+        violated_constraints = unique_general(new_major)
+        if len(violated_constraints) > 0:
+            for violated_constraint in violated_constraints:
+                print('Your input values violated constraint: ', violated_constraint)
+            print('try again')
+        else:
+            try:
+                new_major.save()
+                success = True
+            except Exception as e:
+                print('Errors storing the new department:')
+                print(Utilities.print_exception(e))
+
+
+def delete_major():
+    major = select_major()
+    student_count = Student.objects(major=major).count()
+    if student_count > 0:
+        print(f"Error: This Major cannot be deleted because it has {student_count} students.")
+        return
+    try:
+        major.delete()
+        print(f"Department {major.name} has been successfully deleted.")
     except Exception as e:
         print('Errors deleting the department:')
         print(Utilities.print_exception(e))

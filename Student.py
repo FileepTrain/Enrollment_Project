@@ -14,7 +14,7 @@ class Student(Document):
         'collection': 'students',
         'indexes': [
             {
-                'fields': ['lastName', 'firstName, email'],
+                'fields': ['lastName', 'firstName', 'email'],
                 'unique': True,
                 'name': 'last_first_name_unique'
             }

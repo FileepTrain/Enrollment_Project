@@ -18,7 +18,7 @@ class Department(Document):
             'indexes': [
                 {'unique': True, 'fields': ['name'], 'name': 'department_uk_01'},
                 {'unique': True, 'fields': ['abbreviation'], 'name': 'department_uk_02'},
-                {'unique': True, 'fields': ['chair_name'], 'name': 'department_uk_03'},
+                {'unique': True, 'fields': ['chairName'], 'name': 'department_uk_03'},
                 {'unique': True, 'fields': ['building', 'office'], 'name': 'department_uk_04'},
                 {'unique': True, 'fields': ['description'], 'name': 'department_uk_05'},
             ]}
