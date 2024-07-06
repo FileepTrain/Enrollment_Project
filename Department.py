@@ -57,4 +57,4 @@ class Department(Document):
         for available_course in self.courses:
             if course.equals(available_course):
                 self.courses.remove(available_course)
-                returna
+                return
