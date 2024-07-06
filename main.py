@@ -152,6 +152,9 @@ def add_course():
 def delete_course():
     CU.delete_course()
 
+def list_course():
+    CU.list_course()
+
 if __name__ == '__main__':
     print('Starting in main.')
     monitoring.register(CommandLogger())

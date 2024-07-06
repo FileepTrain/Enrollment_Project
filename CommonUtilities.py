@@ -28,8 +28,6 @@ def select_product() -> Product:
 def select_department() -> Department:
     return select_general(Department)
 
-def select_course() -> Course:
-    return select_general(Course)
 
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
     """
@@ -206,12 +204,12 @@ def add_course():
     department: Department
     while not success:
         department = select_department() # prompt the user for a department
-        course_number = int(input('Enter Course Number --> '))
+        course_number = int(input('Enter Course Number (>= 100 and < 700) --> '))
         course_name = input('Enter Course Name --> ')
         description = input('Enter Course Description --> ')
-        units = int(input('Enter number of units for this course --> '))
+        units = int(input('Enter number of units for this course (units must be no less than 1 and no greater than 5) --> '))
         # create a new course
-        new_course = Course(department.abbreviation, course_number, course_name, description, units)
+        new_course = Course(department, course_number, course_name, description, units)
         # check unique
         violated_constraints = unique_general(new_course)
         if len(violated_constraints) > 0:
@@ -235,8 +233,15 @@ def delete_course():
     for course in all_courses:
         menu_courses.append(Option(course.__str__(), course))
     department.remove_course(Menu('Course Menu',
-                                  'Choose which order item to remov', menu_courses).menu_prompt())
+                                  'Choose which order item to remove', menu_courses).menu_prompt())
     department.save()
+# list all courses form a specific department:
+def list_course():
+    department = select_department()
+    all_courses = department.courses    # all courses in that department
+    for course in all_courses:
+        print(course)
+
 
 
 def delete_product():
