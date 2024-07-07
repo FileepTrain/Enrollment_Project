@@ -1,6 +1,7 @@
 import mongoengine
 from mongoengine import *
 from Course import Course
+from Enrollment import Enrollment
 from EnumValues import Semester, Schedule, Building, StartTime
 
 class Section(Document):
@@ -39,6 +40,22 @@ class Section(Document):
                 {'unique': True, 'fields': ['semester', 'sectionYear', 'schedule', 'startTime', 'instructor'],
                  'name': 'section_uk_03'}
             ]}
+
+def add_enrollment(self, enrollment):
+    for alreadyEnrolled in self.enrollments:
+        if enrollment.departmentAbbrevation.equals(alreadyEnrolled.departmentAbbrevation):
+            if enrollment.courseNumber.equals(alreadyEnrolled.courseNumber):
+                return  # Already enrolled, don't add it.
+    self.enrollments.append(enrollment)
+
+
+def remove_enrollment(self, enrollment):
+    for already_enrolled in self.enrollments:
+        if enrollment.departmentAbbrevation.equals(already_enrolled.departmentAbbrevation):
+            if enrollment.courseNumber.equals(already_enrolled.courseNumber):
+                self.enrollments.remove(enrollment)
+                enrollment.delete(enrollment)
+                return
 
     # constructor
     def __init__(self, course: Course, sectionNumber: int, semester, sectionYear: int,
