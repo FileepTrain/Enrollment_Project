@@ -42,15 +42,14 @@ delete_select = Menu('delete select', 'Which type of object do you want to delet
 ])
 
 # options for listing the existing instances
-list_select = Menu('list select', 'Which type of object do you want to list?:', [
-    Option("Student", "list_student()"),
-    Option("Department", "list_department()"),
-    Option("Major", "list_major()"),
-    Option("Course", "list_course()"),
-    Option("Section", "list_section()"),
-    Option("Students in Section", "list_students_in_section()"),
-    Option("Sections of Student", "list_sections_of_student()"),
-    Option("Instructors in a Course", "list_instructors_in_course()"),
+
+# options for testing the select functions
+select_select = Menu('select select', 'Which type of object do you want to select:', [
+    Option("Student", "select_student()"),
+    Option("Department", "select_department()"),
+    Option("Major", "select_major()"),
+    Option("Course", "select_course()"),
+    Option("Section", "select_section()"),
     Option("Exit", "pass")
 ])
 
