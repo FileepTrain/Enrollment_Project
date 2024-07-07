@@ -66,6 +66,11 @@ class Graded(Enrollment):
 class PassFail(Enrollment):
     application_date = DateTimeField(db_field='application_date', required=True)
 
+    def clean(self):
+        # Ensure application date is not in the future
+        if self.application_date > datetime.now():
+            raise mongoengine.ValidationError('Application date cannot be in the future.')
+
     def __init__(self, application_date, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.application_date = application_date
