@@ -303,11 +303,11 @@ def list_courses():
         return
 
     # Retrieve all courses in the department and sort them alphabetically by course name
-    sorted_courses = sorted(department.courses, key=lambda x: x.course_name)
+    sorted_courses = sorted(department.courses, key=lambda x: x.courseName)
 
-    print(f"Courses for Department {department.department_name}:")
+    print(f"Courses for Department {department.name}:")
     for course in sorted_courses:
-        print(f"Course Name: {course.course_name}, Course Number: {course.course_number}, Description: {course.description}")
+        print(course)
 
 
 
@@ -371,36 +371,30 @@ def list_sections():
     enrollments = Enrollment.objects(course=course)  # get all enrollments within that course
     sections = {enrollment.section for enrollment in enrollments}  # use a set to avoid duplicates
     sorted_sections = sorted(sections, key=lambda x: x.section_number)  # sort sections by section number
-    print(f"Sections for Course {course.course_name} (Course Number: {course.course_number}):")
+    print(f"Sections for Course {course.courseName} (Course Number: {course.courseNumber}):")
     for section in sorted_sections:
         print(f"Section Number: {section.section_number}")
+
 
 def list_instructors_in_course():
     success = False
     while not success:
-        course = select_course()
-        instructors = []
         try:
+            course = select_course()
+            instructors = set()
             sections = Section.objects(course=course)
             for section in sections:
-                instructor = section.instructor
-                if instructor not in instructors:
-                    instructors.add(instructor)
+                instructors.add(section.instructor)
             instructors = sorted(instructors)
-            # Print the unique instructors
+            print("Instructors in the course:")
             for instructor in instructors:
                 print(instructor)
-            success = True
-        except ValueError as ve:
-            print('Attempted status change failed because:')
-            print(ve)
 
-    # Check and print instructors who were not found in the hashmap
-    for instructor in instructors:
-        if instructors[instructor] == 0:
-            print(f'Instructor not found: {instructor}')
-        else:
-            print(f'Instructor found: {instructor}, count: {instructors[instructor]}')
+            success = True
+        except Exception as e:
+            print('An error occurred while listing instructors:')
+            print(e)
+
 
 def add_enrollment():
     success: bool = False

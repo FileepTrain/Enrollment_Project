@@ -112,7 +112,7 @@ def delete_course():
     CU.delete_course()
 
 def list_course():
-    CU.list_course()
+    CU.list_courses()
 
 def add_section():
     CU.add_section()
@@ -121,7 +121,7 @@ def delete_section():
     CU.delete_section()
 
 def list_section():
-    CU.list_section()
+    CU.list_sections()
 
 def list_students_in_section():
     CU.list_students_in_section()
@@ -147,7 +147,7 @@ def delete_enrollment():
 def list_students_in_section():
     CU.list_students_in_section()
 
-def list_instructors_course():
+def list_instructors_in_course():
     CU.list_instructors_in_course()
 
 if __name__ == '__main__':
