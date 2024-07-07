@@ -6,7 +6,7 @@ assignment.
 import decimal
 
 from StudentMajor import StudentMajor
-from Enrollment import Enrollment
+from Enrollment import Enrollment, Graded, PassFail
 from Department import Department
 from Course import Course
 from Major import Major
@@ -36,6 +36,9 @@ def select_course() -> Course:
 
 def select_section() -> Section:
     return select_general(Section)
+
+def select_enrollment() -> Enrollment:
+    return select_general(Enrollment)
 
 
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
@@ -305,6 +308,44 @@ def list_section():
     for section in all_sections:
         print(section)
 
+def add_enrollment():
+    success: bool = False
+    newEnrollment: Enrollment
+    section: Section
+    student: Student
+    while not success:
+        section = select_section()
+        student = select_student()
+        gradingType = prompt_for_enum('Select Grading Type --> (Pass/Fail, Letter Grade)', Enrollment, 'type')
+        if gradingType == 'Letter Grade':
+            minimum_satisfactory_grade = prompt_for_enum('Select Grading Type --> (A, B, C)', Graded, 'type')
+            newEnrollment = Graded(student, section, minimum_satisfactory_grade)
+        else:
+            newEnrollment = PassFail(student, section, prompt_for_date())
+        # check unique
+        violated_constraints = unique_general(newEnrollment)
+        if len(violated_constraints) > 0:
+            for violated_constraint in violated_constraints:
+                print('Your input values violated constraint: ', violated_constraint)
+            print('Try again')
+        else:
+            try:
+                newEnrollment.save()  # save new section
+                student.add_enrollment(newEnrollment)
+                section.add_enrollment(newEnrollment)
+                success = True
+            except Exception as e:
+                print('Exception trying to add the new enrollment:')
+                print(Utilities.print_exception(e))
+
+def delete_enrollment():
+    enrollment = select_enrollment()
+    try:
+        enrollment.delete()
+        print(f'The student {enrollment.studentFirstName} {enrollment.studentLastName} has been unerolled in {enrollment.departmentAbbreviation} {enrollment.courseNumber} Section {enrollment.sectionNumber}')
+    except Exception as e:
+        print('Error:')
+        print(Utilities.print_exception(e))
 
 def update_department_abbreviation():
     success: bool = False
