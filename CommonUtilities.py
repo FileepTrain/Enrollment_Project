@@ -374,6 +374,7 @@ def list_instructors_in_course():
                 instructor = section.instructor
                 if instructor not in instructors:
                     instructors.add(instructor)
+            instructors = sorted(instructors)
             # Print the unique instructors
             for instructor in instructors:
                 print(instructor)
@@ -430,7 +431,8 @@ def delete_enrollment():
 
 def list_students_in_section():
     section = select_section()
-    for enrollment in section.enrollments:
+    enrollments = sorted(section.enrollments)
+    for enrollment in enrollments:
         print(f'{enrollment.studentFirstName} {enrollment.studentLastName}')
 
 def list_sections_of_student():

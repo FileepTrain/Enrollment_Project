@@ -51,13 +51,4 @@ class Student(Document):
         self.email = email
 
     def __str__(self):
-        results = f'{self.firstName}  {self.lastName} \nEmail: {self.email}'
-        if self.studentMajors:
-            results = results + f'\nCurrently studying:'
-            for major in self.studentMajors:
-                results = results + '\n\t' + f'{major.name}'
-            if self.enrollments:
-                results = results + f'Currently enrolled in:'
-            for enrollment in self.enrollments:
-                results = results + '\n\t' + f'{enrollment.departmentAbbreviation} {enrollment.courseNumber} Section {enrollment.sectionNumber}'
-        return results
+        return f'{self.firstName}  {self.lastName} \nEmail: {self.email}'
