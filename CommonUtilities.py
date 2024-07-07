@@ -329,7 +329,6 @@ def add_section():
                                      Section, 'startTime')
         instructor = input("Enter Instructor Name --> ")
         # create a new section
-        print(type(course))
         new_section = Section(course=course, sectionNumber=section_number, semester=semester,
                               sectionYear=section_year, building=building, room=room, schedule=schedule,
                               startTime=start_time, instructor=instructor)

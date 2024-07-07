@@ -1,7 +1,6 @@
 import mongoengine
 from mongoengine import Document, StringField, DateTimeField, ReferenceField
-import datetime
-
+from datetime import datetime
 from Major import Major
 from Student import Student
 

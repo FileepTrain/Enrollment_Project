@@ -59,7 +59,6 @@ class Section(Document):
         # constructor
     def __init__(self, course: Course, sectionNumber: int, semester: Semester, sectionYear: int,building: Building, room: int, schedule, startTime: StartTime, instructor: str, *args, **values):
         super().__init__(*args, **values)
-        print(type(course))
         self.course = course
         if isinstance(course, Course):
             self.departmentAbbreviation = course.departmentAbbreviation
