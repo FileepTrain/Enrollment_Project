@@ -42,19 +42,16 @@ class Section(Document):
 
     def add_enrollment(self, enrollment):
         for alreadyEnrolled in self.enrollments:
-            if enrollment.departmentAbbrevation.equals(alreadyEnrolled.departmentAbbrevation):
-                if enrollment.courseNumber.equals(alreadyEnrolled.courseNumber):
-                    return  # Already enrolled, don't add it.
+            if enrollment.equals(alreadyEnrolled):
+                return  # Already enrolled, don't add it.
         self.enrollments.append(enrollment)
 
 
     def remove_enrollment(self, enrollment):
         for already_enrolled in self.enrollments:
-            if enrollment.departmentAbbrevation.equals(already_enrolled.departmentAbbrevation):
-                if enrollment.courseNumber.equals(already_enrolled.courseNumber):
-                    self.enrollments.remove(enrollment)
-                    enrollment.delete(enrollment)
-                    return
+            if enrollment.equals(already_enrolled):
+                self.enrollments.remove(enrollment)
+                return
 
         # constructor
     def __init__(self, course: Course, sectionNumber: int, semester: Semester, sectionYear: int,building: Building, room: int, schedule, startTime: StartTime, instructor: str, *args, **values):
