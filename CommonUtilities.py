@@ -104,9 +104,9 @@ def delete_student():
 
 
 def list_student():
-    all_students = Student.objects().order_by('last_name', 'first_name')
+    all_students = Student.objects().order_by('lastName', 'firstName')
     for student in all_students:
-        print(f'{student.last_name}, {student.first_name}')
+        print(f'{student.lastName}, {student.firstName}')
 
 
 
@@ -153,9 +153,9 @@ def delete_department():
 
 
 def list_department():
-    all_departments = Department.objects().order_by('name')  # Assuming departments have a 'name' field
+    all_departments = Department.objects().order_by('name')
     for department in all_departments:
-        print(f'{department.name}')  # Adjust the field according to your actual Department model
+        print(f'{department.name}')
 
 
 def add_major():
@@ -311,9 +311,9 @@ def list_courses():
     # Retrieve all courses in the department and sort them alphabetically by course name
     sorted_courses = sorted(department.courses, key=lambda x: x.course_name)
 
-    print(f"Courses for Department {department.department_name}:")
+    print(f"Courses for Department {department.name}:")
     for course in sorted_courses:
-        print(f"Course Name: {course.course_name}, Course Number: {course.course_number}, Description: {course.description}")
+        print(f"Course Name: {course.courseName}, Course Number: {course.courseNumber}, Description: {course.description}")
 
 
 
@@ -480,7 +480,7 @@ def list_students_in_section():
 
     enrollments = section.enrollments.order_by('student.last_name', 'student.first_name')
     for enrollment in enrollments:
-        print(f'{enrollment.student.last_name}, {enrollment.student.first_name}')  # Assuming Enrollment model has a student field that references Student
+        print(f'{enrollment.student.lastName}, {enrollment.student.firstName}')  # Assuming Enrollment model has a student field that references Student
 
 def list_sections_of_student():
     student = select_student()
