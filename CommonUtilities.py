@@ -486,7 +486,7 @@ def update_department_abbreviation():
     department: Department
     while not success:
         department = select_department()  # Find an order to modify.
-        new_abbreviation = input('New Abbreviation: ')
+        new_abbreviation = input('New Abbreviation (Max characters 6): ')
         old_abbreviation = department.abbreviation
         try:
             department.abbreviation = new_abbreviation
@@ -518,7 +518,7 @@ def update_course_name():
     course: Course
     while not success:
         course = select_course()
-        new_name = input('New Name: ')
+        new_name = input('New Name (Max characters 50): ')
         try:
             course.courseName = new_name
             course.save()
@@ -533,8 +533,8 @@ def update_student_name():
     student: Student
     while not success:
         student = select_student()
-        new_first = input('New First Name: ')
-        new_last = input('New Last Name: ')
+        new_first = input('New First Name (Max characters 50): ')
+        new_last = input('New Last Name (Max characters 50): ')
         try:
             student.firstName = new_first
             student.lastName = new_last

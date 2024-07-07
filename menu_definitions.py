@@ -54,18 +54,8 @@ list_select = Menu('list select', 'Which type of object do you want to list?:', 
     Option("Exit", "pass")
 ])
 
-# options for testing the select functions
-select_select = Menu('select select', 'Which type of object do you want to select:', [
-    Option("Student", "select_student()"),
-    Option("Department", "select_department()"),
-    Option("Major", "select_major()"),
-    Option("Course", "select_course()"),
-    Option("Section", "select_section()"),
-    Option("Exit", "pass")
-])
-
 # options for testing the update functions
-update_select = Menu("update select", 'Which type of object do you want to update:', [
+update_select = Menu("Update Select", 'Which type of object do you want to update:', [
     Option("Department Abbreviation", "update_department_abbreviation()"),
     Option("Course Name", "update_course_name()"),
     Option("Student Name", "update_student_name()"),
