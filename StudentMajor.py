@@ -33,6 +33,10 @@ class StudentMajor(Document):
             self.studentFirstName = student.firstName
         self.declaration = declaration
 
+    def clean(self):
+        # Ensure declaration date is not in the future
+        if self.declaration > datetime.now():
+            raise mongoengine.ValidationError('Declaration date cannot be in the future.')
     def __str__(self):
         return (f"Major: {self.majorName}, First: {self.studentFirstName}, Last: {self.studentLastName}, Declaration: {self.declaration}")
 

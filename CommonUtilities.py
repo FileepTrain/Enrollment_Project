@@ -176,7 +176,7 @@ def add_major():
                 department.save()
                 success = True
             except Exception as e:
-                print('Errors storing the new department:')
+                print('Errors storing the new major:')
                 print(Utilities.print_exception(e))
 
 
@@ -211,7 +211,7 @@ def add_student_major():
         student = select_student()
         print('Select Major')
         major = select_major()
-        declaration = datetime.now()
+        declaration = prompt_for_date('Declaration Date (may not be a future date): ')
         new_student_major = StudentMajor(major, student, declaration)
         violated_constraints = unique_general(new_student_major)
         if len(violated_constraints) > 0:

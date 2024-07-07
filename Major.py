@@ -6,7 +6,7 @@ from Department import Department
 class Major(Document):
     department = ReferenceField(Department, db_field='department', required=True, reverse_delete_rule=mongoengine.DENY)
     departmentAbbreviation = StringField(db_field='department_abbreviation', max_length=6, required=True)
-    name = StringField(db_field='course_name', max_length=50, required=True)
+    name = StringField(db_field='name', max_length=50, required=True)
     description = StringField(db_field='description', max_length=500, required=True)
 
     # unique index
