@@ -303,11 +303,11 @@ def list_courses():
         return
 
     # Retrieve all courses in the department and sort them alphabetically by course name
-    sorted_courses = sorted(department.courses, key=lambda x: x.courseName)
+    sorted_courses = sorted(department.courses, key=lambda x: x.course_name)
 
-    print(f"Courses for Department {department.name}:")
+    print(f"Courses for Department {department.department_name}:")
     for course in sorted_courses:
-        print(course)
+        print(f"Course Name: {course.course_name}, Course Number: {course.course_number}, Description: {course.description}")
 
 
 
@@ -363,18 +363,11 @@ def delete_section():
 
 
 # list all sections of a course
-def list_sections():
+def list_section():
     course = select_course()
-    if not course:
-        print("No course selected.")
-        return
-    enrollments = Enrollment.objects(course=course)  # get all enrollments within that course
-    sections = {enrollment.section for enrollment in enrollments}  # use a set to avoid duplicates
-    sorted_sections = sorted(sections, key=lambda x: x.section_number)  # sort sections by section number
-    print(f"Sections for Course {course.courseName} (Course Number: {course.courseNumber}):")
-    for section in sorted_sections:
-        print(f"Section Number: {section.section_number}")
-
+    all_sections = Section.objects(course=course).order_by('sectionNumber')  # get all section within that course
+    for section in all_sections:
+        print(section)
 
 def list_instructors_in_course():
     success = False
