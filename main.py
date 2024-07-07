@@ -36,41 +36,32 @@ def menu_loop(menu: Menu):
 def add():
     menu_loop(add_select)
 
-
 def list_members():
     menu_loop(list_select)
-
 
 def select():
     menu_loop(select_select)
 
-
 def delete():
     menu_loop(delete_select)
-
 
 def update():
     menu_loop(update_select)
 
-
 def select_student() -> Student:
     return select_general(Student)
-
 
 def select_department() -> Department:
     return select_general(Department)
 
-
 def select_major() -> Major:
     return select_general(Major)
-
 
 def select_course() -> Course:
     return select_general(Course)
 
 def select_section() -> Section:
     return select_section(Section)
-
 
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
     return CU.prompt_for_enum(prompt, cls, attribute_name)
@@ -92,6 +83,7 @@ def delete_department():
 
 def list_department():
     CU.list_department()
+
 def add_major():
     CU.add_major()
 
@@ -116,7 +108,6 @@ def delete_enrollment():
 def add_course():
     CU.add_course()
 
-
 def delete_course():
     CU.delete_course()
 
@@ -140,8 +131,21 @@ def update_department_abbreviation():
 
 def update_course_name():
     CU.update_course_name()
+
 def update_student_name():
     CU.update_student_name()
+
+def add_enrollment():
+    CU.add_enrollment()
+
+def delete_enrollment():
+    CU.delete_enrollment()
+
+def list_students_in_section():
+    CU.list_students_in_section()
+
+def list_instructors_course():
+    CU.list_instructors_in_course()
 
 if __name__ == '__main__':
     print('Starting in main.')

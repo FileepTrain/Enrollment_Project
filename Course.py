@@ -38,6 +38,7 @@ class Course(Document):
     # returns a string representation of course
     def __str__(self):
         return (f"Department Abbreviation: {self.departmentAbbreviation}, Course Number: {self.courseNumber}, Course Name: {self.courseName}, Description: {self.description}, Units: {self.units}")
+    
     # fucnction to check if 2 courses is the same
     def equals(self, other) -> bool:
         if self.departmentAbbreviation == other.departmentAbbreviation and self.courseNumber == other.courseNumber:
