@@ -104,9 +104,10 @@ def delete_student():
 
 
 def list_student():
-    all_students = Student.objects()
+    all_students = Student.objects().order_by('lastName', 'firstName')
     for student in all_students:
-        print(student)
+        print(f'{student.lastName}, {student.firstName}')
+
 
 
 def add_department():
@@ -152,9 +153,9 @@ def delete_department():
 
 
 def list_department():
-    all_departments = Department.objects()
+    all_departments = Department.objects().order_by('name')
     for department in all_departments:
-        print(department)
+        print(f'{department.name}')
 
 
 def add_major():
@@ -305,9 +306,9 @@ def list_courses():
     # Retrieve all courses in the department and sort them alphabetically by course name
     sorted_courses = sorted(department.courses, key=lambda x: x.course_name)
 
-    print(f"Courses for Department {department.department_name}:")
+    print(f"Courses for Department {department.name}:")
     for course in sorted_courses:
-        print(f"Course Name: {course.course_name}, Course Number: {course.course_number}, Description: {course.description}")
+        print(f"Course Name: {course.courseName}, Course Number: {course.courseNumber}, Description: {course.description}")
 
 
 
@@ -464,7 +465,7 @@ def delete_enrollment():
 
 def list_students_in_section():
     section = select_section()
-    enrollments = sorted(section.enrollments)
+    enrollments = section.enrollments.order_by('student.last_name', 'student.first_name')
     for enrollment in enrollments:
         print(enrollment)
 
