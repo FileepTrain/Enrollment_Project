@@ -59,8 +59,8 @@ select_select = Menu('select select', 'Which type of object do you want to selec
 
 # options for testing the update functions
 update_select = Menu("update select", 'Which type of object do you want to update:', [
-    Option("Order", "update_order()"),
-    Option("Order Items", "update_order_item()"),
-    Option("Products", "update_product()"),
+    Option("Department Abbreviation", "update_department_abbreviation()"),
+    Option("Course Name", "update_course_name()"),
+    Option("Student Name", "update_student_name()"),
     Option("Exit", "pass")
 ])

@@ -1,12 +1,13 @@
 from mongoengine import *
 
 
+
 class Student(Document):
     lastName = StringField(db_field='last_name', max_length=50, required=True)
     firstName = StringField(db_field='first_name', max_length=50, required=True)
     email = StringField(db_field='email', min_lenth=10, max_length=100, required=True)
-    enrollments = ListField(ReferenceField('enrollments'))
-    studentMajors = ListField(ReferenceField('studentMajors'))
+    enrollments = ListField(ReferenceField('Enrollment'))
+    studentMajors = ListField(ReferenceField('StudentMajor'))
 
     meta = {
         'collection': 'students',
