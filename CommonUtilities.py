@@ -17,6 +17,7 @@ from ConstraintUtilities import select_general, unique_general, prompt_for_date
 from Menu import Menu
 from Option import Option
 from Section import Section
+from EnumValues import GradingType, MinimumSatisfactoryGrade
 
 
 def select_department() -> Department:
@@ -196,7 +197,7 @@ def delete_major():
 
 def list_major():
     department = select_department()
-    all_majors = department.majors  # all courses in that department
+    all_majors = sorted(department.majors)  # all courses in that department
     for major in all_majors:
         print(major)
 
@@ -295,13 +296,19 @@ def delete_course():
         print(Utilities.print_exception(e))
 
 
-# list all courses form a specific department:
-
-def list_course():
+def list_courses():
     department = select_department()
-    all_courses = department.courses  # all courses in that department
-    for course in all_courses:
-        print(course)
+    if not department:
+        print("No department selected.")
+        return
+
+    # Retrieve all courses in the department and sort them alphabetically by course name
+    sorted_courses = sorted(department.courses, key=lambda x: x.course_name)
+
+    print(f"Courses for Department {department.department_name}:")
+    for course in sorted_courses:
+        print(f"Course Name: {course.course_name}, Course Number: {course.course_number}, Description: {course.description}")
+
 
 
 def add_section():
@@ -357,11 +364,17 @@ def delete_section():
 
 
 # list all sections of a course
-def list_section():
+def list_sections():
     course = select_course()
-    all_sections = Section.objects(course=course)  # get all section within that course
-    for section in all_sections:
-        print(section)
+    if not course:
+        print("No course selected.")
+        return
+    enrollments = Enrollment.objects(course=course)  # get all enrollments within that course
+    sections = {enrollment.section for enrollment in enrollments}  # use a set to avoid duplicates
+    sorted_sections = sorted(sections, key=lambda x: x.section_number)  # sort sections by section number
+    print(f"Sections for Course {course.course_name} (Course Number: {course.course_number}):")
+    for section in sorted_sections:
+        print(f"Section Number: {section.section_number}")
 
 def list_instructors_in_course():
     success = False
@@ -399,11 +412,23 @@ def add_enrollment():
         section = select_section()
         student = select_student()
         gradingType = prompt_for_enum('Select Grading Type --> (Pass/Fail, Letter Grade)', Enrollment, 'type')
-        if gradingType == 'Letter Grade':
-            minimum_satisfactory_grade = prompt_for_enum('Select Grading Type --> (A, B, C)', Graded, 'type')
-            newEnrollment = Graded(student, section, minimum_satisfactory_grade)
+        if gradingType == GradingType.LETTER_GRADE:
+            minimum_satisfactory_grade = prompt_for_enum('Select Minimum Satisfactory Grade --> (A, B, C)',
+                                                         Graded, 'minimum_satisfactory')
+            newEnrollment = Graded(
+                student=student,
+                section=section,
+                type=gradingType,
+                minimum_satisfactory=minimum_satisfactory_grade
+            )
         else:
-            newEnrollment = PassFail(student, section, prompt_for_date())
+            application_date = prompt_for_date('Enter the application date (YYYY-MM-DD): ')
+            newEnrollment = PassFail(
+                student=student,
+                section=section,
+                type=gradingType,
+                application_date=application_date
+            )
         # check unique
         violated_constraints = unique_general(newEnrollment)
         if len(violated_constraints) > 0:
@@ -437,7 +462,7 @@ def list_students_in_section():
 
 def list_sections_of_student():
     student = select_student()
-    for enrollment in student.enrollments:
+    for enrollment in sorted(student.enrollments):
         print(f'{enrollment.departmentAbbreviation} {enrollment.courseNumber} Section {enrollment.sectionNumber} {enrollment.sectionYear} {enrollment.sectionSemester}')
 
 def update_department_abbreviation():

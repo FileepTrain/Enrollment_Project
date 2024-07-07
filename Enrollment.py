@@ -2,7 +2,7 @@ import mongoengine
 from mongoengine import *
 from Student import Student
 from Section import Section
-from EnumValues import GradingType, MinimumSatisfactoryGrade, Semester
+from EnumValues import MinimumSatisfactoryGrade, Semester, GradingType
 from datetime import datetime
 
 class Enrollment(Document):
@@ -15,6 +15,7 @@ class Enrollment(Document):
     studentLastName = StringField(db_field='last_name', max_length=50, required=True)
     student = ReferenceField(Student, required=True, reverse_delete_rule=mongoengine.DENY)
     section = ReferenceField(Section, required=True, reverse_delete_rule=mongoengine.DENY)
+    type = EnumField(GradingType, db_field='type', required=True)
 
     meta = {'allow_inheritance': True,
             'collection': 'enrollments',
@@ -22,8 +23,9 @@ class Enrollment(Document):
                 {'unique': True, 'fields': ['student', 'section']}
             ]}
 
-    def __init__(self, student: Student, section: Section, *args, **kwargs):
+    def __init__(self, student: Student, section: Section, type: GradingType, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.type = type
         self.student = student
         if isinstance(student, Student):
             self.studentFirstName = student.firstName
@@ -47,16 +49,16 @@ class Enrollment(Document):
              self.sectionSemester == other.sectionSemester and
              self.studentFirstName == other.studentFirstName and
              self.studentLastName == other.studentLastName):
-              return True
+             return True
          return False
 
 
 class Graded(Enrollment):
     minimum_satisfactory = EnumField(MinimumSatisfactoryGrade, db_field='minimum_satisfactory_grade', required=True)
 
-    def __init__(self, minimumSatisfactory, *args, **kwargs):
+    def __init__(self, minimum_satisfactory, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.minimumSatisfactory = minimumSatisfactory
+            self.minimum_satisfactory = minimum_satisfactory
 
     def __str__(self):
         return f'{super().__str__()} with a graded course and needs a minimum satisfactory grade of {self.minimumSatisfactory}'

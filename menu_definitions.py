@@ -25,6 +25,7 @@ add_select = Menu('add select', 'Which type of object do you want to add?:', [
     Option("Course", "add_course()"),
     Option("Section", "add_section()"),
     Option("Student Major", "add_student_major()"),
+    Option("Enrollment", "add_enrollment()"),
     Option("Exit", "pass")
 ])
 
@@ -36,6 +37,7 @@ delete_select = Menu('delete select', 'Which type of object do you want to delet
     Option("Course", "delete_course()"),
     Option("Section", "delete_section()"),
     Option("Student Major", "delete_student_major()"),
+    Option("Enrollment", "delete_enrollment()"),
     Option("Exit", "pass")
 ])
 

@@ -25,8 +25,6 @@ class MinimumSatisfactoryGrade(Enum):
     A = 'A'
     B = 'B'
     C = 'C'
-    D = 'D'
-    F = 'F'
 
 class Schedule(Enum):
     MW = 'MW'
