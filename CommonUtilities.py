@@ -347,6 +347,11 @@ def delete_enrollment():
         print('Error:')
         print(Utilities.print_exception(e))
 
+def list_students_in_section():
+    section = select_section()
+    for enrollment in section.enrollments:
+        print(f'{enrollment.studentFirstName} {enrollment.studentLastName}')
+
 def update_department_abbreviation():
     success: bool = False
     department: Department
