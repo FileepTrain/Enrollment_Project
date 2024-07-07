@@ -10,7 +10,7 @@ from CommandLogger import CommandLogger, log
 from pymongo import monitoring
 from Menu import Menu
 from Option import Option
-from menu_definitions import menu_main, add_select, select_select, delete_select, update_select
+from menu_definitions import menu_main, add_select, list_select, select_select, delete_select, update_select
 import CommonUtilities as CU  # Utilities that work for the sample code & the worked HW assignment.
 
 """
@@ -47,6 +47,21 @@ def delete():
 
 def update():
     menu_loop(update_select)
+
+def select_student() -> Student:
+    return select_general(Student)
+
+def select_department() -> Department:
+    return select_general(Department)
+
+def select_major() -> Major:
+    return select_general(Major)
+
+def select_course() -> Course:
+    return select_general(Course)
+
+def select_section() -> Section:
+    return select_section(Section)
 
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
     return CU.prompt_for_enum(prompt, cls, attribute_name)
