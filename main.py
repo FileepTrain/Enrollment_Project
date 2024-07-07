@@ -75,10 +75,17 @@ def select_section() -> Section:
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
     return CU.prompt_for_enum(prompt, cls, attribute_name)
 
+def add_student():
+    CU.add_student()
+
+def delete_student():
+    CU.delete_student()
+
+def list_student():
+    CU.list_student()
 
 def add_department():
     CU.add_department()
-
 
 def delete_department():
     CU.delete_department()
@@ -114,6 +121,13 @@ def delete_section():
 def list_section():
     CU.list_section()
 
+def update_department_abbreviation():
+    CU.update_department_abbreviation()
+
+def update_course_name():
+    CU.update_course_name()
+def update_student_name():
+    CU.update_student_name()
 
 if __name__ == '__main__':
     print('Starting in main.')

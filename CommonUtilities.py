@@ -98,6 +98,11 @@ def delete_student():
         print('Errors deleting the student:')
         print(Utilities.print_exception(e))
 
+def list_student():
+    all_students = Student.objects()
+    for student in all_students:
+        print(student)
+
 
 def add_department():
     success: bool = False
@@ -166,7 +171,7 @@ def add_major():
 
 
 def list_department():
-    all_departments = Section.objects()
+    all_departments = Department.objects()
     for department in all_departments:
         print(department)
 
@@ -299,3 +304,76 @@ def list_section():
     all_sections = Section.objects(course=course)  # get all section within that course
     for section in all_sections:
         print(section)
+
+
+def update_department_abbreviation():
+    success: bool = False
+    department: Department
+    while not success:
+        department = select_department()  # Find an order to modify.
+        new_abbreviation = input('New Abbreviation: ')
+        old_abbreviation = department.abbreviation
+        try:
+            department.abbreviation = new_abbreviation
+            department.save()
+            majors = Major.objects(department=department)
+            for major in majors:
+                major.departmentAbbreviation = new_abbreviation
+                major.save()
+            courses = Course.objects(department=department)
+            for course in courses:
+                course.departmentAbbreviation = new_abbreviation
+                course.save()
+            sections = Section.objects(departmentAbbreviation=old_abbreviation)
+            for section in sections:
+                enrollments = Enrollment.objects(section=section)
+                for enrollment in enrollments:
+                    enrollment.departmentAbbreviation = new_abbreviation
+                    enrollment.save()
+                section.departmentAbbreviation = new_abbreviation
+                section.save()
+            success = True
+        except ValueError as VE:
+            print('Attempted status change failed because:')
+            print(VE)
+
+
+def update_course_name():
+    success: bool = False
+    course: Course
+    while not success:
+        course = select_course()
+        new_name = input('New Name: ')
+        try:
+            course.courseName = new_name
+            course.save()
+            success = True
+        except ValueError as VE:
+            print('Attempted status change failed because:')
+            print(VE)
+
+def update_student_name():
+    success: bool = False
+    student: Student
+    while not success:
+        student = select_student()
+        new_first = input('New First Name: ')
+        new_last = input('New Last Name: ')
+        try:
+            student.firstName = new_first
+            student.lastName = new_last
+            student.save()
+            majors = Major.objects(student=student)
+            for major in majors:
+                major.studentFirstName = new_first
+                major.studentLastName = new_last
+                major.save()
+            enrollments = Enrollment.objects(student=student)
+            for enrollment in enrollments:
+                enrollment.studentFirstName = new_first
+                enrollment.studentLastName = new_last
+                enrollment.save()
+            success = True
+        except ValueError as VE:
+            print('Attempted status change failed because:')
+            print(VE)

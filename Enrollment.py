@@ -23,12 +23,12 @@ class Enrollment(Document):
 
     def __init__(self, student: Student, section: Section, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if student:
-            self.student = student
+        self.student = student
+        if isinstance(student, Student):
             self.studentFirstName = student.firstName
             self.studentLastName = student.lastName
-
-        if section:
+        self.section = section
+        if isinstance(section, Section):
             self.departmentAbbreviation = section.departmentAbbreviation
             self.courseNumber = section.courseNumber
             self.sectionNumber = section.sectionNumber
