@@ -304,7 +304,7 @@ def list_courses():
         return
 
     # Retrieve all courses in the department and sort them alphabetically by course name
-    sorted_courses = sorted(department.courses, key=lambda x: x.course_name)
+    sorted_courses = sorted(department.courses, key=lambda x: x.courseName)
 
     print(f"Courses for Department {department.name}:")
     for course in sorted_courses:
