@@ -369,17 +369,11 @@ def delete_section():
 
 
 # list all sections of a course
-def list_sections():
+def list_section():
     course = select_course()
-    if not course:
-        print("No course selected.")
-        return
-    enrollments = Enrollment.objects(course=course)  # get all enrollments within that course
-    sections = {enrollment.section for enrollment in enrollments}  # use a set to avoid duplicates
-    sorted_sections = sorted(sections, key=lambda x: x.section_number)  # sort sections by section number
-    print(f"Sections for Course {course.course_name} (Course Number: {course.course_number}):")
-    for section in sorted_sections:
-        print(f"Section Number: {section.section_number}")
+    all_sections = Section.objects(course=course).order_by('sectionNumber')  # get all section within that course
+    for section in all_sections:
+        print(section)
 
 def list_instructors_in_course():
     success = False
@@ -400,13 +394,6 @@ def list_instructors_in_course():
         except ValueError as ve:
             print('Attempted status change failed because:')
             print(ve)
-
-    # Check and print instructors who were not found in the hashmap
-    for instructor in instructors:
-        if instructors[instructor] == 0:
-            print(f'Instructor not found: {instructor}')
-        else:
-            print(f'Instructor found: {instructor}, count: {instructors[instructor]}')
 
 def add_enrollment():
     success: bool = False
