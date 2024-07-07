@@ -307,7 +307,7 @@ def list_course():
 def add_section():
     success: bool = False
     new_section: Section
-    course: Department
+    course: Course
     while not success:
         course = select_course()  # select a course
         section_number = int(input("Enter Section Number --> "))
@@ -322,8 +322,10 @@ def add_section():
                                      Section, 'startTime')
         instructor = input("Enter Instructor Name --> ")
         # create a new section
-        new_section = Section(course, section_number, semester, section_year, building, room, schedule, start_time,
-                              instructor)
+        print(type(course))
+        new_section = Section(course=course, sectionNumber=section_number, semester=semester,
+                              sectionYear=section_year, building=building, room=room, schedule=schedule,
+                              startTime=start_time, instructor=instructor)
         # check unique
         violated_constraints = unique_general(new_section)
         if len(violated_constraints) > 0:
@@ -335,7 +337,7 @@ def add_section():
                 new_section.save()  # save new section
                 success = True
             except Exception as e:
-                print('Exception trying to add the new course:')
+                print('Exception trying to add the new section:')
                 print(Utilities.print_exception(e))
 
 

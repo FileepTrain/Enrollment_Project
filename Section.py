@@ -1,7 +1,6 @@
 import mongoengine
 from mongoengine import *
 from Course import Course
-from Enrollment import Enrollment
 from EnumValues import Semester, Schedule, Building, StartTime
 
 class Section(Document):
@@ -41,26 +40,26 @@ class Section(Document):
                  'name': 'section_uk_03'}
             ]}
 
-def add_enrollment(self, enrollment):
-    for alreadyEnrolled in self.enrollments:
-        if enrollment.departmentAbbrevation.equals(alreadyEnrolled.departmentAbbrevation):
-            if enrollment.courseNumber.equals(alreadyEnrolled.courseNumber):
-                return  # Already enrolled, don't add it.
-    self.enrollments.append(enrollment)
+    def add_enrollment(self, enrollment):
+        for alreadyEnrolled in self.enrollments:
+            if enrollment.departmentAbbrevation.equals(alreadyEnrolled.departmentAbbrevation):
+                if enrollment.courseNumber.equals(alreadyEnrolled.courseNumber):
+                    return  # Already enrolled, don't add it.
+        self.enrollments.append(enrollment)
 
 
-def remove_enrollment(self, enrollment):
-    for already_enrolled in self.enrollments:
-        if enrollment.departmentAbbrevation.equals(already_enrolled.departmentAbbrevation):
-            if enrollment.courseNumber.equals(already_enrolled.courseNumber):
-                self.enrollments.remove(enrollment)
-                enrollment.delete(enrollment)
-                return
+    def remove_enrollment(self, enrollment):
+        for already_enrolled in self.enrollments:
+            if enrollment.departmentAbbrevation.equals(already_enrolled.departmentAbbrevation):
+                if enrollment.courseNumber.equals(already_enrolled.courseNumber):
+                    self.enrollments.remove(enrollment)
+                    enrollment.delete(enrollment)
+                    return
 
-    # constructor
-    def __init__(self, course: Course, sectionNumber: int, semester, sectionYear: int,
-                 building, room: int, schedule, startTime, instructor: str, *args, **values):
+        # constructor
+    def __init__(self, course: Course, sectionNumber: int, semester: Semester, sectionYear: int,building: Building, room: int, schedule, startTime: StartTime, instructor: str, *args, **values):
         super().__init__(*args, **values)
+        print(type(course))
         self.course = course
         if isinstance(course, Course):
             self.departmentAbbreviation = course.departmentAbbreviation
@@ -74,7 +73,7 @@ def remove_enrollment(self, enrollment):
         self.startTime = startTime
         self.instructor = instructor
 
-    # returns a string representation of section
+        # returns a string representation of section
     def __str__(self):
         return f"Course: {self.departmentAbbreviation} {self.courseNumber}, Section Number: {self.sectionNumber}, Year: {self.sectionYear}, Semester: {self.semester}, Location: {self.building} {self.room}, Instructor: {self.instructor}"
 

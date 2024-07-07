@@ -107,6 +107,12 @@ def add_student_major():
 def delete_student_major():
     CU.delete_student_major()
 
+def add_enrollment():
+    CU.add_enrollment()()
+
+def delete_enrollment():
+    CU.delete_enrollment()
+
 def add_course():
     CU.add_course()
 
@@ -125,6 +131,9 @@ def delete_section():
 
 def list_section():
     CU.list_section()
+
+def list_students_in_section():
+    CU.list_students_in_section()
 
 def update_department_abbreviation():
     CU.update_department_abbreviation()

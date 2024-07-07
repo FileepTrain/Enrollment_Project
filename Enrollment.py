@@ -5,6 +5,7 @@ from Section import Section
 from EnumValues import GradingType, MinimumSatisfactoryGrade, Semester
 from datetime import datetime
 
+
 class Enrollment(Document):
     departmentAbbreviation = StringField(db_field='department_abbreviation', max_length=6, required=True)
     courseNumber = IntField(db_field='course_number', required=True)
@@ -44,21 +45,19 @@ class Graded(Enrollment):
     minimum_satisfactory = EnumField(MinimumSatisfactoryGrade, db_field='minimum_satisfactory_grade', required=True)
 
     def __init__(self, minimumSatisfactory, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.minimumSatisfactory = minimumSatisfactory
+        super().__init__(*args, **kwargs)
+        self.minimumSatisfactory = minimumSatisfactory
 
     def __str__(self):
         return f'{super().__str__()} with a graded course and needs a minimum satisfactory grade of {self.minimumSatisfactory}'
 
-class PassFail(Enrollment):
-    application_date = EnumField(datetime, db_field = 'application_date', required=True)
 
-    def __init__(self, application_date, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.minimumSatisfactory = minimumSatisfactory
+class PassFail(Enrollment):
+    application_date = DateTimeField(db_field='application_date', required=True)
+
+    def __init__(self, applicationDate, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.applicationDate = applicationDate
 
     def __str__(self):
         return f'{super().__str__()} with a Pass/Fail grading system and an application date of {self.application_date}'
-
-
-

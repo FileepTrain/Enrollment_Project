@@ -25,6 +25,7 @@ add_select = Menu('add select', 'Which type of object do you want to add?:', [
     Option("Course", "add_course()"),
     Option("Section", "add_section()"),
     Option("Student Major", "add_student_major()"),
+    Option("Student Enrollment", "add_enrollment()"),
     Option("Exit", "pass")
 ])
 
@@ -46,6 +47,7 @@ list_select = Menu('list select', 'Which type of object do you want to list?:', 
     Option("Major", "list_major()"),
     Option("Course", "list_course()"),
     Option("Section", "list_section()"),
+    Option("Students in Section", "list_student_in_section()"),
     Option("Exit", "pass")
 ])
 
