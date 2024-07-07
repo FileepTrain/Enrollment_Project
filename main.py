@@ -121,7 +121,7 @@ def delete_section():
     CU.delete_section()
 
 def list_section():
-    CU.list_sections()
+    CU.list_section()
 
 def list_students_in_section():
     CU.list_students_in_section()

@@ -18,7 +18,7 @@ class Utilities:
     def startup():
         print("Prompting for the password.")
         while True:
-            cluster = f"mongodb+srv://huyvu03:huyvucecs323@cecs323-summer2024.p9tpukg.mongodb.net/?retryWrites=true&w=majority&appName=cecs323-summer2024"
+            cluster = f"mongodb+srv://feelip:1234@cecs323.no9syqy.mongodb.net/?retryWrites=true&w=majority&appName=CECS323"
             database_name = 'Demonstration'
             client = connect(db=database_name, host=cluster)
             try:
