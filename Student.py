@@ -1,20 +1,18 @@
 from mongoengine import *
-# from studentMajor import studentMajor
-# from enrollment import enrollment
 
 
 class Student(Document):
     lastName = StringField(db_field='last_name', max_length=50, required=True)
     firstName = StringField(db_field='first_name', max_length=50, required=True)
     email = StringField(db_field='email', min_lenth=10, max_length=100, required=True)
-    enrollments = ListField(ReferenceField('enrollment'))
-    studentMajors = ListField(ReferenceField('studentMajor'))
+    enrollments = ListField(ReferenceField('enrollments'))
+    studentMajors = ListField(ReferenceField('studentMajors'))
 
     meta = {
         'collection': 'students',
         'indexes': [
             {
-                'fields': ['lastName', 'firstName, email'],
+                'fields': ['lastName', 'firstName', 'email'],
                 'unique': True,
                 'name': 'last_first_name_unique'
             }
@@ -49,12 +47,13 @@ class Student(Document):
                 studentMajor.delete(studentMajor)
                 return
 
-    def __init__(self, lastName: str, firstName: str, *args, **values):
+    def __init__(self, lastName: str, firstName: str, email: str, *args, **values):
         super().__init__(*args, **values)
         if self.enrollments is None:
             self.enrollments = []  # initialize to no enrollments.
         self.firstName = firstName
         self.lastName = lastName
+        self.email = email
 
     def __str__(self):
         results = f'{self.firstName}  {self.lastName} \nEmail: {self.email}'
@@ -65,5 +64,5 @@ class Student(Document):
             if self.enrollments:
                 results = results + f'Currently enrolled in:'
             for enrollment in self.enrollments:
-                results = results + '\n\t' + f'{enrollment.department_abbreviation} {enrollment.course_number} Section {enrollment.sectionNumber}'
+                results = results + '\n\t' + f'{enrollment.departmentAbbreviation} {enrollment.courseNumber} Section {enrollment.sectionNumber}'
         return results

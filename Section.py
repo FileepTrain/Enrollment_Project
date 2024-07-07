@@ -1,12 +1,7 @@
 import mongoengine
 from mongoengine import *
 from Course import Course
-from Semester import Semester
-from Schedule import Schedule
-from Building import Building
-from StartTime import StartTime
-
-
+from EnumValues import Semester, Schedule, Building, StartTime
 
 class Section(Document):
     # the course that this section is in (reference from Course)
@@ -37,18 +32,22 @@ class Section(Document):
     # uniqueness constraints
     meta = {'collection': 'sections',
             'indexes': [
-                {'unique': True, 'fields': ['course', 'section_number', 'semester', 'section_year'], 'name': 'section_uk_01'},
-                {'unique': True, 'fields': ['semester', 'section_year', 'building', 'room', 'schedule', 'start_time'], 'name': 'section_uk_02'},
-                {'unique': True, 'fields': ['semester', 'section_year', 'schedule', 'start_time', 'instructor'], 'name': 'section_uk_03'}
+                {'unique': True, 'fields': ['departmentAbbreviation', 'courseNumber', 'sectionNumber', 'semester', 'sectionYear'],
+                 'name': 'section_uk_01'},
+                {'unique': True, 'fields': ['semester', 'sectionYear', 'building', 'room', 'schedule', 'startTime'],
+                 'name': 'section_uk_02'},
+                {'unique': True, 'fields': ['semester', 'sectionYear', 'schedule', 'startTime', 'instructor'],
+                 'name': 'section_uk_03'}
             ]}
-    
+
     # constructor
-    def __init__(self, course: Course, sectionNumber: int, semester, sectionYear: int, 
+    def __init__(self, course: Course, sectionNumber: int, semester, sectionYear: int,
                  building, room: int, schedule, startTime, instructor: str, *args, **values):
         super().__init__(*args, **values)
         self.course = course
-        self.departmentAbbreviation = course.departmentAbbreviation
-        self.courseNumber = course.courseNumber
+        if isinstance(course, Course):
+            self.departmentAbbreviation = course.departmentAbbreviation
+            self.courseNumber = course.courseNumber
         self.sectionNumber = sectionNumber
         self.semester = semester
         self.sectionYear = sectionYear
@@ -57,14 +56,9 @@ class Section(Document):
         self.schedule = schedule
         self.startTime = startTime
         self.instructor = instructor
-    
+
     # returns a string representation of section
     def __str__(self):
-        return (f"Course: {self.departmentAbbreviation} {self.courseNumber}, 
-                Section Number: {self.sectionNumber},
-                Year: {self.sectionYear},
-                Semester: {self.semester},
-                Location: {self.building} {self.room},
-                Instructor: {self.instructor}")
+        return f"Course: {self.departmentAbbreviation} {self.courseNumber}, Section Number: {self.sectionNumber}, Year: {self.sectionYear}, Semester: {self.semester}, Location: {self.building} {self.room}, Instructor: {self.instructor}"
 
 

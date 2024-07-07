@@ -1,9 +1,11 @@
 from ConstraintUtilities import select_general, unique_general, prompt_for_date
-from Product import Product
+from Section import Section
+from StudentMajor import StudentMajor
+from Course import Course
+from Department import Department
+from Major import Major
+from Student import Student
 from Utilities import Utilities
-from Order import Order
-from OrderItem import OrderItem
-from StatusChange import StatusChange
 from CommandLogger import CommandLogger, log
 from pymongo import monitoring
 from Menu import Menu
@@ -51,109 +53,67 @@ def update():
     menu_loop(update_select)
 
 
-def select_order() -> Order:
-    return select_general(Order)
-def select_product() -> Order:
-    return select_general(Product)
+def select_student() -> Student:
+    return select_general(Student)
 
-def select_order_item() -> OrderItem:
-    return select_general(OrderItem)
+
+def select_department() -> Department:
+    return select_general(Department)
+
+
+def select_major() -> Major:
+    return select_general(Major)
+
+
+def select_course() -> Course:
+    return select_general(Course)
+
+def select_section() -> Section:
+    return select_section(Section)
 
 
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
     return CU.prompt_for_enum(prompt, cls, attribute_name)
 
 
-def add_order():
-    CU.add_order()
+def add_department():
+    CU.add_department()
 
 
-def add_order_item():
-    """
-    Add an item to an existing order.
-    :return: None
-    """
-    success: bool = False
-    new_order_item: OrderItem
-    order: Order
-    product: Product
-    while not success:
-        order = select_order()  # Prompt the user for an order to operate on.
-        product = select_product()
-        # Create a new OrderItem instance.
-        new_order_item = OrderItem(order,
-                                   product,
-                                   int(input('Quantity --> ')))
-        # Make sure that this adheres to the existing uniqueness constraints.
-        # I COULD use print_exception after MongoEngine detects any uniqueness constraint violations, but
-        # MongoEngine will only report one uniqueness constraint violation at a time.  I want them all.
-        violated_constraints = unique_general(new_order_item)
-        if len(violated_constraints) > 0:
-            for violated_constraint in violated_constraints:
-                print('Your input values violated constraint: ', violated_constraint)
-            print('Try again')
-        else:
-            try:
-                # we cannot add the OrderItem to the Order until it's been stored in the database.
-                new_order_item.save()
-                order.add_item(new_order_item)  # Add this OrderItem to the Order's MongoDB list of items.
-                order.save()  # Update the order in the database.
-                product.add_item(new_order_item)  # Add this OrderItem to the Order's MongoDB list of items.
-                product.save()  # Update the order in the database.
-                success = True  # Finally ready to call  it good.
-            except Exception as e:
-                print('Exception trying to add the new item:')
-                print(Utilities.print_exception(e))
+def delete_department():
+    CU.delete_department()
+
+def list_department():
+    CU.list_department()
+def add_major():
+    CU.add_major()
 
 
-def update_order():
-    CU.update_order()
+def delete_major():
+    CU.delete_major()
 
+def list_major():
+    CU.list_major()
 
-def delete_order():
-    CU.delete_order()
-
-
-def delete_order_item():
-    """
-    Remove just one item from an existing order.
-    :return: None
-    """
-    order = select_order()  # prompt the user for an order to update
-    items = order.orderItems  # retrieve the list of items in this order
-    menu_items: [Option] = []  # list of order items to choose from
-    # Create an ad hoc menu of all of the items presently on the order.  Use __str__ to make a text version of each item
-    for item in items:
-        menu_items.append(Option(item.__str__(), item))
-    # prompt the user for which one of those order items to remove, and remove it.
-    order.remove_item(Menu('Item Menu',
-                           'Choose which order item to remove', menu_items).menu_prompt())
-    # Update the order to no longer include that order item in its MongoDB list of order items.
-    order.save()
-
-def add_product():
-    CU.add_product()
-
-def delete_product():
-    CU.delete_product()
-
-def update_product():
-    CU.update_product()
-def list_product():
-    CU.list_product
-
-def list_order_item():
-    CU.list_order_item()
-
-# added course functions
 def add_course():
     CU.add_course()
+
 
 def delete_course():
     CU.delete_course()
 
 def list_course():
     CU.list_course()
+
+def add_section():
+    CU.add_section()
+
+def delete_section():
+    CU.delete_section()
+
+def list_section():
+    CU.list_section()
+
 
 if __name__ == '__main__':
     print('Starting in main.')

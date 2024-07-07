@@ -20,15 +20,16 @@ class Course(Document):
     # uniqueness constraints
     meta = {'collection': 'courses',
             'indexes': [
-                {'unique': True, 'fields': ['department_abbreviation', 'course_number'], 'name': 'course_uk_01'},
-                {'unique': True, 'fields': ['department_abbreviation', 'course_name'], 'name': 'course_uk_02'}    
+                {'unique': True, 'fields': ['departmentAbbreviation', 'courseNumber'], 'name': 'course_uk_01'},
+                {'unique': True, 'fields': ['departmentAbbreviation', 'courseName'], 'name': 'course_uk_02'}
             ]}
     
     # constructor
     def __init__(self, department: Department, courseNumber: int, courseName: str, description: str, units: int, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.department = department
-        self.departmentAbbreviation = department.abbreviation
+        if isinstance(department, Department):
+            self.departmentAbbreviation = department.abbreviation
         self.courseNumber = courseNumber
         self.courseName = courseName
         self.description = description
@@ -37,8 +38,7 @@ class Course(Document):
     
     # returns a string representation of course
     def __str__(self):
-        return (f"Department Abbreviation: {self.departmentAbbreviation}, Course Number: {self.courseNumber},
-                Course Name: {self.courseName}, Description: {self.description}, Units: {self.units}")
+        return (f"Department Abbreviation: {self.departmentAbbreviation}, Course Number: {self.courseNumber}, Course Name: {self.courseName}, Description: {self.description}, Units: {self.units}")
     # fucnction to check if 2 courses is the same
     def equals(self, other) -> bool:
         if self.departmentAbbreviation == other.departmentAbbreviation and self.courseNumber == other.courseNumber:
