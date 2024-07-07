@@ -114,12 +114,12 @@ def add_department():
     success: bool = False
     new_department = None
     while not success:
-        name = input('Enter Department Name --> ')
-        abbreviation = input('Enter the Department Abbreviation --> ')
-        chair_name = input('Enter Chair Name --> ')
+        name = input('Enter Department Name (Max characters 50) --> ')
+        abbreviation = input('Enter the Department Abbreviation (Max characters 6) --> ')
+        chair_name = input('Enter Chair Name (Max characters 80) --> ')
         building = prompt_for_enum('Select building:', Department, 'building')
         office = int(input('Enter Office --> '))
-        description = input('Enter Department Description --> ')
+        description = input('Enter Department Description (Max characters 500)--> ')
         new_department = Department(name,
                                     abbreviation,
                                     chair_name, building, office, description)
@@ -255,8 +255,8 @@ def add_course():
     while not success:
         department = select_department()  # prompt the user for a department
         course_number = int(input('Enter Course Number (>= 100 and < 700) --> '))
-        course_name = input('Enter Course Name --> ')
-        description = input('Enter Course Description --> ')
+        course_name = input('Enter Course Name (Max characters 50) --> ')
+        description = input('Enter Course Description (Max characters 500)--> ')
         units = int(
             input('Enter number of units for this course (units must be no less than 1 and no greater than 5) --> '))
         # create a new course
