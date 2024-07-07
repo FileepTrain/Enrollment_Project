@@ -44,6 +44,8 @@ list_select = Menu('list select', 'Which type of object do you want to list?:', 
     Option("Major", "list_major()"),
     Option("Course", "list_course()"),
     Option("Section", "list_section()"),
+    Option("Students in Section", "list_students_in_section()"),
+    Option("Instructors in a Course", "list_instructors_in_course()"),
     Option("Exit", "pass")
 ])
 

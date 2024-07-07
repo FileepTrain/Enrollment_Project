@@ -51,11 +51,11 @@ class Graded(Enrollment):
         return f'{super().__str__()} with a graded course and needs a minimum satisfactory grade of {self.minimumSatisfactory}'
 
 class PassFail(Enrollment):
-    application_date = EnumField(datetime, db_field = 'application_date', required=True)
+    application_date = DateTimeField(db_field='application_date', required=True)
 
     def __init__(self, application_date, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.minimumSatisfactory = minimumSatisfactory
+            self.application_date = application_date
 
     def __str__(self):
         return f'{super().__str__()} with a Pass/Fail grading system and an application date of {self.application_date}'

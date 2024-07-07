@@ -308,6 +308,32 @@ def list_section():
     for section in all_sections:
         print(section)
 
+def list_instructors_in_course():
+    success = False
+    while not success:
+        course = select_course()
+        instructors = []
+        try:
+            sections = Section.objects(course=course)
+            for section in sections:
+                instructor = section.instructor
+                if instructor not in instructors:
+                    instructors.add(instructor)
+            # Print the unique instructors
+            for instructor in instructors:
+                print(instructor)
+            success = True
+        except ValueError as ve:
+            print('Attempted status change failed because:')
+            print(ve)
+
+    # Check and print instructors who were not found in the hashmap
+    for instructor in instructors:
+        if instructors[instructor] == 0:
+            print(f'Instructor not found: {instructor}')
+        else:
+            print(f'Instructor found: {instructor}, count: {instructors[instructor]}')
+
 def add_enrollment():
     success: bool = False
     newEnrollment: Enrollment
@@ -409,7 +435,7 @@ def update_student_name():
             student.firstName = new_first
             student.lastName = new_last
             student.save()
-            majors = Major.objects(student=student)
+            majors = StudentMajor.objects(student=student)
             for major in majors:
                 major.studentFirstName = new_first
                 major.studentLastName = new_last
