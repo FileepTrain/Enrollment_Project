@@ -95,12 +95,17 @@ def list_department():
 def add_major():
     CU.add_major()
 
-
 def delete_major():
     CU.delete_major()
 
 def list_major():
     CU.list_major()
+
+def add_student_major():
+    CU.add_student_major()
+
+def delete_student_major():
+    CU.delete_student_major()
 
 def add_course():
     CU.add_course()

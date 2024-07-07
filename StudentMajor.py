@@ -7,8 +7,8 @@ from Student import Student
 
 
 class StudentMajor(Document):
-    major = ReferenceField(Student, required=True, reverse_delete_rule=mongoengine.DENY)
-    student = ReferenceField(Major, required=True, reverse_delete_rule=mongoengine.DENY)
+    major = ReferenceField(Major, required=True, reverse_delete_rule=mongoengine.DENY)
+    student = ReferenceField(Student, required=True, reverse_delete_rule=mongoengine.DENY)
     majorName = StringField(db_field='major_name', max_length=50, required=True)
     studentLastName = StringField(db_field='student_last_name', max_length=50, required=True)
     studentFirstName = StringField(db_field='student_first_name', max_length=50, required=True)
@@ -25,10 +25,12 @@ class StudentMajor(Document):
     def __init__(self, major: Major, student: Student, declaration: datetime, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.major = major
+        if isinstance(major, Major):
+            self.majorName = major.name
         self.student = student
-        self.majorName = major.name
-        self.studentLastName = student.lastName
-        self.studentFirstName = student.firstName
+        if isinstance(student, Student):
+            self.studentLastName = student.lastName
+            self.studentFirstName = student.firstName
         self.declaration = declaration
 
     def __str__(self):
@@ -41,3 +43,8 @@ class StudentMajor(Document):
     def get_student(self):
         from Student import Student
         return Student.objects(id=self.student).first()
+
+    def equals(self, other) -> bool:
+        if self.majorName == other.majorName and self.studentLastName == other.studentLastName and self.studentFirstName == other.studentFirstName == other.declaration:
+            return True
+        return False

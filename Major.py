@@ -12,7 +12,7 @@ class Major(Document):
     # unique index
     meta = {'collection': 'majors',
             'indexes': [
-                {'unique': True, 'fields': ['name'], 'name': 'course_uk_01'},
+                {'unique': True, 'fields': ['name'], 'name': 'major_uk_01'},
             ]}
 
     # initialization:

@@ -1,7 +1,6 @@
 from mongoengine import *
 
 
-
 class Student(Document):
     lastName = StringField(db_field='last_name', max_length=50, required=True)
     firstName = StringField(db_field='first_name', max_length=50, required=True)
@@ -12,11 +11,8 @@ class Student(Document):
     meta = {
         'collection': 'students',
         'indexes': [
-            {
-                'fields': ['lastName', 'firstName', 'email'],
-                'unique': True,
-                'name': 'last_first_name_unique'
-            }
+            {'fields': ['lastName', 'firstName'], 'unique': True, 'name': 'student_uk_01'},
+            {'fields': ['email'], 'unique': True, 'name': 'student_uk_02'}
         ]
     }
 
@@ -42,12 +38,10 @@ class Student(Document):
         self.studentMajors.append(studentMajor)
 
     def remove_major(self, studentMajor):
-        for already_enrolled in self.studentMajors:
-            if studentMajor.majorName.equals(already_enrolled.majorName):
-                self.studentMajors.remove(studentMajor)
-                studentMajor.delete(studentMajor)
+        for major in self.studentMajors:
+            if studentMajor.equals(major):
+                self.studentMajors.remove(major)
                 return
-
     def __init__(self, lastName: str, firstName: str, email: str, *args, **values):
         super().__init__(*args, **values)
         if self.enrollments is None:

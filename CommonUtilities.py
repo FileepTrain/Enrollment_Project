@@ -4,6 +4,7 @@ These are utilities that are common between the sample code and the worked homew
 assignment.
 """
 import decimal
+from datetime import datetime
 
 from StudentMajor import StudentMajor
 from Enrollment import Enrollment
@@ -66,10 +67,10 @@ def add_student():
     success: bool = False
     new_student = None
     while not success:
-        firstName = input('Enter Student First Name --> ')
         lastName = input('Enter Student Last Name --> ')
+        firstName = input('Enter Student First Name --> ')
         email = input('Enter Student Email --> ')
-        new_student = Student(firstName, lastName, email)
+        new_student = Student(lastName, firstName, email)
 
         violated_constraints = unique_general(new_student)
         if len(violated_constraints) > 0:
@@ -90,13 +91,13 @@ def delete_student():
     if student.enrollments or student.studentMajors:
         print("Error: This department cannot be deleted because it has associated majors or courses.")
         return
-
     try:
         student.delete()
         print(f"{student.name} has been successfully deleted.")
     except Exception as e:
         print('Errors deleting the student:')
         print(Utilities.print_exception(e))
+
 
 def list_student():
     all_students = Student.objects()
@@ -146,6 +147,12 @@ def delete_department():
         print(Utilities.print_exception(e))
 
 
+def list_department():
+    all_departments = Department.objects()
+    for department in all_departments:
+        print(department)
+
+
 def add_major():
     success: bool = False
     new_major = None
@@ -170,12 +177,6 @@ def add_major():
                 print(Utilities.print_exception(e))
 
 
-def list_department():
-    all_departments = Department.objects()
-    for department in all_departments:
-        print(department)
-
-
 def delete_major():
     major = select_major()
     student_count = Student.objects(major=major).count()
@@ -195,6 +196,51 @@ def list_major():
     all_majors = department.majors  # all courses in that department
     for major in all_majors:
         print(major)
+
+
+def add_student_major():
+    success: bool = False
+    new_student_major: StudentMajor
+    student: Student
+    major: Major
+    while not success:
+        print('Select Student')
+        student = select_student()
+        print('Select Major')
+        major = select_major()
+        declaration = datetime.now()
+        new_student_major = StudentMajor(major, student, declaration)
+        violated_constraints = unique_general(new_student_major)
+        if len(violated_constraints) > 0:
+            for violated_constraint in violated_constraints:
+                print('Your input values violated constraint: ', violated_constraint)
+            print('try again')
+        else:
+            try:
+                new_student_major.save()
+                student.add_major(new_student_major)  # Add this Course to the Department's MongoDB list of items.
+                student.save()
+                success = True
+            except Exception as e:
+                print('Errors storing the new student major:')
+                print(Utilities.print_exception(e))
+
+
+def delete_student_major():
+    student = select_student()
+    all_student_majors = student.studentMajors  # Assuming this is a list of student majors
+    menu_student_majors = [Option(studentMajor.__str__(), studentMajor) for studentMajor in all_student_majors]
+    studentMajor = Menu('Major Menu', 'Choose which Major to remove', menu_student_majors).menu_prompt()
+    try:
+        print(type(studentMajor))
+        student.remove_major(studentMajor)
+        student.save()
+        studentMajor.delete()
+        print(
+            f'{student.firstName} is no longer in the {studentMajor.majorName}. The major has been successfully deleted.')
+    except Exception as e:
+        print('Errors deleting Student Major:')
+        print(Utilities.print_exception(e))
 
 
 def add_course():
@@ -234,9 +280,16 @@ def delete_course():
     menu_courses: [Option] = []
     for course in all_courses:
         menu_courses.append(Option(course.__str__(), course))
-    department.remove_course(Menu('Course Menu',
-                                  'Choose which order item to remove', menu_courses).menu_prompt())
-    department.save()
+    course = Menu('Course Menu',
+                  'Choose which order item to remove', menu_courses).menu_prompt()
+    try:
+        department.remove_course(course)  # delete the course inside department
+        department.save()
+        course.delete()  # delete the course
+        print(f'Course {course.departmentAbbreviation} {course.courseNumber} has been successfully deleted.')
+    except Exception as e:
+        print('Errors deleting section:')
+        print(Utilities.print_exception(e))
 
 
 # list all courses form a specific department:
@@ -351,6 +404,7 @@ def update_course_name():
         except ValueError as VE:
             print('Attempted status change failed because:')
             print(VE)
+
 
 def update_student_name():
     success: bool = False
