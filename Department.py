@@ -49,12 +49,12 @@ class Department(Document):
         for already_added_major in self.majors:
             if major.equals(already_added_major):
                 return # don't add course if it already exists
-        self.courses.append(major)
+        self.majors.append(major)
     # remove a course from the department
     def remove_major(self, major):
         for available_major in self.majors:
             if major.equals(available_major):
-                self.courses.remove(available_major)
+                self.majors.remove(available_major)
                 return
     # added:
     # add a course to the department

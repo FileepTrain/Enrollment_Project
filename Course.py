@@ -27,7 +27,8 @@ class Course(Document):
     def __init__(self, department: Department, courseNumber: int, courseName: str, description: str, units: int, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.department = department
-        self.departmentAbbreviation = department.abbreviation
+        if isinstance(department, Department):
+            self.departmentAbbreviation = department.abbreviation
         self.courseNumber = courseNumber
         self.courseName = courseName
         self.description = description

@@ -5,6 +5,8 @@ assignment.
 """
 import decimal
 
+from StudentMajor import StudentMajor
+from Enrollment import Enrollment
 from Department import Department
 from Course import Course
 from Major import Major
@@ -13,19 +15,27 @@ from Utilities import Utilities
 from ConstraintUtilities import select_general, unique_general, prompt_for_date
 from Menu import Menu
 from Option import Option
+from Section import Section
 
 
 def select_department() -> Department:
     return select_general(Department)
 
+
 def select_major() -> Major:
     return select_general(Major)
+
 
 def select_student() -> Student:
     return select_general(Student)
 
+
 def select_course() -> Course:
     return select_general(Course)
+
+
+def select_section() -> Section:
+    return select_general(Section)
 
 
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
@@ -52,7 +62,6 @@ def prompt_for_enum(prompt: str, cls, attribute_name: str):
         raise ValueError(f'This attribute is not an enum: {attribute_name}')
 
 
-
 def add_student():
     success: bool = False
     new_student = None
@@ -74,6 +83,7 @@ def add_student():
             except Exception as e:
                 print('Errors storing the new student:')
                 print(Utilities.print_exception(e))
+
 
 def delete_student():
     student = select_student()
@@ -123,13 +133,13 @@ def delete_department():
     if department.majors or department.courses:
         print("Error: This department cannot be deleted because it has associated majors or courses.")
         return
-
     try:
         department.delete()
         print(f"Department {department.name} has been successfully deleted.")
     except Exception as e:
         print('Errors deleting the department:')
         print(Utilities.print_exception(e))
+
 
 def add_major():
     success: bool = False
@@ -147,10 +157,18 @@ def add_major():
         else:
             try:
                 new_major.save()
+                department.add_major(new_major)  # Add this Course to the Department's MongoDB list of items.
+                department.save()
                 success = True
             except Exception as e:
                 print('Errors storing the new department:')
                 print(Utilities.print_exception(e))
+
+
+def list_department():
+    all_departments = Section.objects()
+    for department in all_departments:
+        print(department)
 
 
 def delete_major():
@@ -166,17 +184,25 @@ def delete_major():
         print('Errors deleting the department:')
         print(Utilities.print_exception(e))
 
-# add a course to an existing department
+
+def list_major():
+    department = select_department()
+    all_majors = department.majors  # all courses in that department
+    for major in all_majors:
+        print(major)
+
+
 def add_course():
     success: bool = False
     new_course: Course
     department: Department
     while not success:
-        department = select_department() # prompt the user for a department
+        department = select_department()  # prompt the user for a department
         course_number = int(input('Enter Course Number (>= 100 and < 700) --> '))
         course_name = input('Enter Course Name --> ')
         description = input('Enter Course Description --> ')
-        units = int(input('Enter number of units for this course (units must be no less than 1 and no greater than 5) --> '))
+        units = int(
+            input('Enter number of units for this course (units must be no less than 1 and no greater than 5) --> '))
         # create a new course
         new_course = Course(department, course_number, course_name, description, units)
         # check unique
@@ -188,26 +214,88 @@ def add_course():
         else:
             try:
                 new_course.save()
-                department.add_course(new_course) # Add this Course to the Department's MongoDB list of items.
+                department.add_course(new_course)  # Add this Course to the Department's MongoDB list of items.
                 department.save()
                 success = True
             except Exception as e:
                 print('Exception trying to add the new course:')
                 print(Utilities.print_exception(e))
+
+
 # delete a course from a department
 def delete_course():
     department = select_department()
-    all_courses = department.courses    # the list of courses in this department
+    all_courses = department.courses  # the list of courses in this department
     menu_courses: [Option] = []
     for course in all_courses:
         menu_courses.append(Option(course.__str__(), course))
     department.remove_course(Menu('Course Menu',
                                   'Choose which order item to remove', menu_courses).menu_prompt())
     department.save()
+
+
 # list all courses form a specific department:
 
 def list_course():
     department = select_department()
-    all_courses = department.courses    # all courses in that department
+    all_courses = department.courses  # all courses in that department
     for course in all_courses:
         print(course)
+
+
+def add_section():
+    success: bool = False
+    new_section: Section
+    course: Department
+    while not success:
+        course = select_course()  # select a course
+        section_number = int(input("Enter Section Number --> "))
+        semester = prompt_for_enum("Enter Semester (Fall, Spring, Summer I, Summer II, Summer III, Winter) --> ",
+                                   Section, 'semester')
+        section_year = int(input("Enter Year --> "))
+        building = prompt_for_enum("Enter Building (ANAC, CDC, DC, ECS, EN2, EN3, EN4, EN5, ET, HSCI, NUR, VEC) --> ",
+                                   Section, 'building')
+        room = int(input("Enter Room Number (> 1 and < 1000) --> "))
+        schedule = prompt_for_enum("Enter Schedule (MW, TuTh, MWF, F, S) --> ", Section, 'schedule')
+        start_time = prompt_for_enum("Enter Section Start Time (HH:MM, 24-hour format, >= 08:00 and <= 19:30) --> ",
+                                     Section, 'startTime')
+        instructor = input("Enter Instructor Name --> ")
+        # create a new section
+        new_section = Section(course, section_number, semester, section_year, building, room, schedule, start_time,
+                              instructor)
+        # check unique
+        violated_constraints = unique_general(new_section)
+        if len(violated_constraints) > 0:
+            for violated_constraint in violated_constraints:
+                print('Your input values violated constraint: ', violated_constraint)
+            print('Try again')
+        else:
+            try:
+                new_section.save()  # save new section
+                success = True
+            except Exception as e:
+                print('Exception trying to add the new course:')
+                print(Utilities.print_exception(e))
+
+
+def delete_section():
+    section = select_section()
+    # check for enrollments
+    if section.enrollments:
+        print("This section cannot be deleted because it has students enrolled in it.")
+        return
+    # delete the section
+    try:
+        section.delete()
+        print(f'Section {section.sectionNumber} has been successfully deleted.')
+    except Exception as e:
+        print('Errors deleting section:')
+        print(Utilities.print_exception(e))
+
+
+# list all sections of a course
+def list_section():
+    course = select_course()
+    all_sections = Section.objects(course=course)  # get all section within that course
+    for section in all_sections:
+        print(section)

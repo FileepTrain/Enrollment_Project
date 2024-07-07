@@ -1,4 +1,5 @@
 from ConstraintUtilities import select_general, unique_general, prompt_for_date
+from Section import Section
 from StudentMajor import StudentMajor
 from Course import Course
 from Department import Department
@@ -51,40 +52,68 @@ def delete():
 def update():
     menu_loop(update_select)
 
+
 def select_student() -> Student:
     return select_general(Student)
+
+
 def select_department() -> Department:
     return select_general(Department)
+
+
 def select_major() -> Major:
     return select_general(Major)
+
 
 def select_course() -> Course:
     return select_general(Course)
 
+def select_section() -> Section:
+    return select_section(Section)
+
+
 def prompt_for_enum(prompt: str, cls, attribute_name: str):
     return CU.prompt_for_enum(prompt, cls, attribute_name)
+
 
 def add_department():
     CU.add_department()
 
+
 def delete_department():
     CU.delete_department()
 
-
+def list_department():
+    CU.list_department()
 def add_major():
     CU.add_major()
+
 
 def delete_major():
     CU.delete_major()
 
+def list_major():
+    CU.list_major()
+
 def add_course():
     CU.add_course()
+
 
 def delete_course():
     CU.delete_course()
 
 def list_course():
     CU.list_course()
+
+def add_section():
+    CU.add_section()
+
+def delete_section():
+    CU.delete_section()
+
+def list_section():
+    CU.list_section()
+
 
 if __name__ == '__main__':
     print('Starting in main.')
