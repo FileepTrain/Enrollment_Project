@@ -104,9 +104,10 @@ def delete_student():
 
 
 def list_student():
-    all_students = Student.objects()
+    all_students = Student.objects().order_by('last_name', 'first_name')
     for student in all_students:
-        print(student)
+        print(f'{student.last_name}, {student.first_name}')
+
 
 
 def add_department():
@@ -152,9 +153,9 @@ def delete_department():
 
 
 def list_department():
-    all_departments = Department.objects()
+    all_departments = Department.objects().order_by('name')  # Assuming departments have a 'name' field
     for department in all_departments:
-        print(department)
+        print(f'{department.name}')  # Adjust the field according to your actual Department model
 
 
 def add_major():
@@ -197,9 +198,14 @@ def delete_major():
 
 def list_major():
     department = select_department()
-    all_majors = sorted(department.majors)  # all courses in that department
+    if not department:
+        print("No department selected.")
+        return
+
+    all_majors = sorted(department.majors, key=lambda x: x.name)  # Assuming majors have a 'name' field
     for major in all_majors:
-        print(major)
+        print(f'{major.name}')  # Adjust the field according to your actual Major model
+
 
 
 def add_student_major():
@@ -285,14 +291,14 @@ def delete_course():
     for course in all_courses:
         menu_courses.append(Option(course.__str__(), course))
     course = Menu('Course Menu',
-                  'Choose which course to remove', menu_courses).menu_prompt()
+                  'Choose which order item to remove', menu_courses).menu_prompt()
     try:
         department.remove_course(course)  # delete the course inside department
         department.save()
         course.delete()  # delete the course
         print(f'Course {course.departmentAbbreviation} {course.courseNumber} has been successfully deleted.')
     except Exception as e:
-        print('Errors deleting course:')
+        print('Errors deleting section:')
         print(Utilities.print_exception(e))
 
 
@@ -329,6 +335,7 @@ def add_section():
                                      Section, 'startTime')
         instructor = input("Enter Instructor Name --> ")
         # create a new section
+        print(type(course))
         new_section = Section(course=course, sectionNumber=section_number, semester=semester,
                               sectionYear=section_year, building=building, room=room, schedule=schedule,
                               startTime=start_time, instructor=instructor)
@@ -448,43 +455,33 @@ def add_enrollment():
 
 def delete_enrollment():
     enrollment = select_enrollment()
-    section = enrollment.section
-    student = enrollment.student
-    
-    try:
-        section.remove_enrollment(enrollment)
-        section.save()
-        print(f'An enrollment has been successfully deleted from section.')
-    except Exception as e:
-        print('Errors deleting enrollment from section:')
-        print(Utilities.print_exception(e))
-    
-    try:
-        student.remove_enrollment(enrollment)
-        student.save()
-        print(f'An enrollment has been successfully deleted from student.')
-    except Exception as e:
-        print('Errors deleting enrollment from student:')
-        print(Utilities.print_exception(e))
-    
     try:
         enrollment.delete()
-        enrollment.save()
-        print(f'An enrollment has been succesfully deleted.')
+        print(f'The student {enrollment.studentFirstName} {enrollment.studentLastName} has been unerolled in {enrollment.departmentAbbreviation} {enrollment.courseNumber} Section {enrollment.sectionNumber}')
     except Exception as e:
-        print('Errors deleting enrollment from student:')
+        print('Error:')
         print(Utilities.print_exception(e))
 
 def list_students_in_section():
     section = select_section()
-    enrollments = sorted(section.enrollments)
+    if not section:
+        print("No section selected.")
+        return
+
+    enrollments = section.enrollments.order_by('student.last_name', 'student.first_name')
     for enrollment in enrollments:
-        print(enrollment)
+        print(f'{enrollment.student.last_name}, {enrollment.student.first_name}')  # Assuming Enrollment model has a student field that references Student
 
 def list_sections_of_student():
     student = select_student()
-    for enrollment in sorted(student.enrollments):
-        print(enrollment)
+    if not student:
+        print("No student selected.")
+        return
+
+    enrollments = student.enrollments.order_by('departmentAbbreviation', 'courseNumber', 'sectionNumber')
+    for enrollment in enrollments:
+        print(f'{enrollment.departmentAbbreviation} {enrollment.courseNumber} Section {enrollment.sectionNumber} {enrollment.sectionYear} {enrollment.sectionSemester}')
+
 
 def update_department_abbreviation():
     success: bool = False
