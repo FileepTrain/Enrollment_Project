@@ -38,6 +38,17 @@ class Enrollment(Document):
 
     def __str__(self):
         return f'{self.studentFirstName} {self.studentLastName} is enrolled in {self.courseNumber} Section {self.sectionNumber}'
+    
+    def equals(self, other) -> bool:
+         if (self.departmentAbbreviation == other.departmentAbbreviation and
+             self.courseNumber == other.courseNumber and
+             self.sectionNumber == other.sectionNumber and
+             self.sectionYear == other.sectionYear and
+             self.sectionSemester == other.sectionSemester and
+             self.studentFirstName == other.studentFirstName and
+             self.studentLastName == other.studentLastName):
+              return True
+         return False
 
 
 class Graded(Enrollment):

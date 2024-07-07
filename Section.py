@@ -41,20 +41,17 @@ class Section(Document):
                  'name': 'section_uk_03'}
             ]}
 
-def add_enrollment(self, enrollment):
-    for alreadyEnrolled in self.enrollments:
-        if enrollment.departmentAbbrevation.equals(alreadyEnrolled.departmentAbbrevation):
-            if enrollment.courseNumber.equals(alreadyEnrolled.courseNumber):
+    def add_enrollment(self, enrollment):
+        for alreadyEnrolled in self.enrollments:
+            if enrollment.equals(alreadyEnrolled):
                 return  # Already enrolled, don't add it.
-    self.enrollments.append(enrollment)
+        self.enrollments.append(enrollment)
 
 
-def remove_enrollment(self, enrollment):
-    for already_enrolled in self.enrollments:
-        if enrollment.departmentAbbrevation.equals(already_enrolled.departmentAbbrevation):
-            if enrollment.courseNumber.equals(already_enrolled.courseNumber):
+    def remove_enrollment(self, enrollment):
+        for already_enrolled in self.enrollments:
+            if enrollment.equals(already_enrolled):
                 self.enrollments.remove(enrollment)
-                enrollment.delete(enrollment)
                 return
 
     # constructor
