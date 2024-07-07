@@ -229,9 +229,17 @@ def delete_course():
     menu_courses: [Option] = []
     for course in all_courses:
         menu_courses.append(Option(course.__str__(), course))
-    department.remove_course(Menu('Course Menu',
-                                  'Choose which order item to remove', menu_courses).menu_prompt())
+    course = Menu('Course Menu',
+                    'Choose which order item to remove', menu_courses).menu_prompt()
+    department.remove_course(course) # delete the course inside department
     department.save()
+
+    try:
+        course.delete()     # delete the course
+        print(f'Course {course.departmentAbbreviation} {course.courseNumber} has been successfully deleted.')
+    except Exception as e:
+        print('Errors deleting section:')
+        print(Utilities.print_exception(e))
 
 
 # list all courses form a specific department:
