@@ -71,9 +71,9 @@ def add_student():
     success: bool = False
     new_student = None
     while not success:
-        lastName = input('Enter Student Last Name --> ')
-        firstName = input('Enter Student First Name --> ')
-        email = input('Enter Student Email --> ')
+        lastName = input('Enter Student Last Name (Max characters 50) --> ')
+        firstName = input('Enter Student First Name (Max characters 50) --> ')
+        email = input('Enter Student Email (Max characters 255) --> ')
         new_student = Student(lastName, firstName, email)
 
         violated_constraints = unique_general(new_student)
@@ -163,8 +163,8 @@ def add_major():
     new_major = None
     while not success:
         department = select_department()
-        name = input('Enter Major Name --> ')
-        description = input('Enter Major Description --> ')
+        name = input('Enter Major Name (Max characters 50) --> ')
+        description = input('Enter Major Description (Max characters 500) --> ')
         new_major = Major(department, name, description)
         violated_constraints = unique_general(new_major)
         if len(violated_constraints) > 0:
@@ -328,7 +328,7 @@ def add_section():
         schedule = prompt_for_enum("Enter Schedule (MW, TuTh, MWF, F, S) --> ", Section, 'schedule')
         start_time = prompt_for_enum("Enter Section Start Time (HH:MM, 24-hour format, >= 08:00 and <= 19:30) --> ",
                                      Section, 'startTime')
-        instructor = input("Enter Instructor Name --> ")
+        instructor = input("Enter Instructor Name (Max characters 80) --> ")
         # create a new section
         new_section = Section(course=course, sectionNumber=section_number, semester=semester,
                               sectionYear=section_year, building=building, room=room, schedule=schedule,
