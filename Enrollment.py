@@ -51,6 +51,10 @@ class CourseType(Enrollment):
 
     def __str__(self):
         if self.type == 'Letter Grade':
+<<<<<<< Updated upstream
             return f'{super().__str__()} with a {self.type} grading system and a minimum satisfactory grade of {self.minimumSatisfactory}'
+=======
+            return f'{super().__str__()} with a {self.type} grading system and a minimum satisfactory grade of {self.minimum_satisfactory}'
+>>>>>>> Stashed changes
         return f'{super().__str__()} with a {self.type} grading system'
 
