@@ -291,14 +291,14 @@ def delete_course():
     for course in all_courses:
         menu_courses.append(Option(course.__str__(), course))
     course = Menu('Course Menu',
-                  'Choose which order item to remove', menu_courses).menu_prompt()
+                  'Choose which course to remove', menu_courses).menu_prompt()
     try:
         department.remove_course(course)  # delete the course inside department
         department.save()
         course.delete()  # delete the course
         print(f'Course {course.departmentAbbreviation} {course.courseNumber} has been successfully deleted.')
     except Exception as e:
-        print('Errors deleting section:')
+        print('Errors deleting course:')
         print(Utilities.print_exception(e))
 
 
@@ -335,7 +335,6 @@ def add_section():
                                      Section, 'startTime')
         instructor = input("Enter Instructor Name --> ")
         # create a new section
-        print(type(course))
         new_section = Section(course=course, sectionNumber=section_number, semester=semester,
                               sectionYear=section_year, building=building, room=room, schedule=schedule,
                               startTime=start_time, instructor=instructor)
@@ -453,12 +452,36 @@ def add_enrollment():
                 print('Exception trying to add the new enrollment:')
                 print(Utilities.print_exception(e))
 
+
 def delete_enrollment():
     enrollment = select_enrollment()
+    section = enrollment.section
+    student = enrollment.student
+
+    try:
+        section.remove_enrollment(enrollment)
+        section.save()
+        print(f'An enrollment has been successfully deleted from section.')
+    except Exception as e:
+        print('Errors deleting enrollment from section:')
+        print(Utilities.print_exception(e))
+
+    try:
+        student.remove_enrollment(enrollment)
+        student.save()
+        print(f'An enrollment has been successfully deleted from student.')
+    except Exception as e:
+        print('Errors deleting enrollment from student:')
+        print(Utilities.print_exception(e))
+
     try:
         enrollment.delete()
-        print(f'The student {enrollment.studentFirstName} {enrollment.studentLastName} has been unerolled in {enrollment.departmentAbbreviation} {enrollment.courseNumber} Section {enrollment.sectionNumber}')
+        enrollment.save()
+        print(f'An enrollment has been succesfully deleted.')
+        print(
+            f'The student {enrollment.studentFirstName} {enrollment.studentLastName} has been unerolled in {enrollment.departmentAbbreviation} {enrollment.courseNumber} Section {enrollment.sectionNumber}')
     except Exception as e:
+        print('Errors deleting enrollment from student:')
         print('Error:')
         print(Utilities.print_exception(e))
 
