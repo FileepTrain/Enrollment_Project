@@ -439,7 +439,9 @@ def add_enrollment():
             try:
                 newEnrollment.save()  # save new section
                 student.add_enrollment(newEnrollment)
+                student.save()
                 section.add_enrollment(newEnrollment)
+                section.save()
                 success = True
             except Exception as e:
                 print('Exception trying to add the new enrollment:')
@@ -453,7 +455,7 @@ def delete_enrollment():
     try:
         section.remove_enrollment(enrollment)
         section.save()
-        print(f'An enrollment has been successfully deleted.')
+        print(f'An enrollment has been successfully deleted from section.')
     except Exception as e:
         print('Errors deleting enrollment from section:')
         print(Utilities.print_exception(e))
@@ -461,7 +463,15 @@ def delete_enrollment():
     try:
         student.remove_enrollment(enrollment)
         student.save()
-        print(f'An enrollment has been successfully deleted.')
+        print(f'An enrollment has been successfully deleted from student.')
+    except Exception as e:
+        print('Errors deleting enrollment from student:')
+        print(Utilities.print_exception(e))
+    
+    try:
+        enrollment.delete()
+        enrollment.save()
+        print(f'An enrollment has been succesfully deleted.')
     except Exception as e:
         print('Errors deleting enrollment from student:')
         print(Utilities.print_exception(e))
@@ -470,12 +480,12 @@ def list_students_in_section():
     section = select_section()
     enrollments = sorted(section.enrollments)
     for enrollment in enrollments:
-        print(f'{enrollment.studentFirstName} {enrollment.studentLastName}')
+        print(enrollment)
 
 def list_sections_of_student():
     student = select_student()
     for enrollment in sorted(student.enrollments):
-        print(f'{enrollment.departmentAbbreviation} {enrollment.courseNumber} Section {enrollment.sectionNumber} {enrollment.sectionYear} {enrollment.sectionSemester}')
+        print(enrollment)
 
 def update_department_abbreviation():
     success: bool = False

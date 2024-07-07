@@ -42,7 +42,7 @@ class Department(Document):
         Returns a string representation of the Order instance.
         :return: A string representation of the Order instance.
         """
-        return (f' Abbreviation: {self.abbreviation}, Name: {self.name}, Location: {self.building} {self.office}, '
+        return (f' Abbreviation: {self.abbreviation}, Name: {self.name}, Location: {self.building.value} {self.office}, '
                 f'Description: {self.description},')
 
     def add_major(self, major):

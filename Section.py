@@ -72,6 +72,6 @@ class Section(Document):
 
         # returns a string representation of section
     def __str__(self):
-        return f"Course: {self.departmentAbbreviation} {self.courseNumber}, Section Number: {self.sectionNumber}, Year: {self.sectionYear}, Semester: {self.semester}, Location: {self.building} {self.room}, Instructor: {self.instructor}"
+        return f"Course: {self.departmentAbbreviation} {self.courseNumber}, Section Number: {self.sectionNumber}, Year: {self.sectionYear}, Semester: {self.semester.value}, Location: {self.building.value} {self.room}, Start Time: {self.startTime.value}, Instructor: {self.instructor}"
 
 

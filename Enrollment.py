@@ -39,7 +39,7 @@ class Enrollment(Document):
             self.sectionSemester = section.semester
 
     def __str__(self):
-        return f'{self.studentFirstName} {self.studentLastName} is enrolled in {self.departmentAbbreviation} {self.courseNumber} Section {self.sectionNumber} {self.sectionYear} {self.sectionSemester}'
+        return f'{self.studentFirstName} {self.studentLastName} is enrolled in {self.departmentAbbreviation} {self.courseNumber} Section {self.sectionNumber} {self.sectionYear} {self.sectionSemester.value}'
     
     def equals(self, other) -> bool:
          if (self.departmentAbbreviation == other.departmentAbbreviation and
@@ -61,7 +61,7 @@ class Graded(Enrollment):
             self.minimum_satisfactory = minimum_satisfactory
 
     def __str__(self):
-        return f'{super().__str__()} with a graded course and needs a minimum satisfactory grade of {self.minimumSatisfactory}'
+        return f'{super().__str__()} with a graded course and needs a minimum satisfactory grade of {self.minimum_satisfactory.value}'
 
 class PassFail(Enrollment):
     application_date = DateTimeField(db_field='application_date', required=True)
