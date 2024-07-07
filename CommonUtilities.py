@@ -464,11 +464,18 @@ def delete_enrollment():
         print(Utilities.print_exception(e))
 
 def list_students_in_section():
-    section = select_section()
-    enrollments = section.enrollments.order_by('student.last_name', 'student.first_name')
-    for enrollment in enrollments:
-        print(enrollment)
-
+    success = False
+    while not success:
+        try:
+            section = select_section()
+            enrollments = section.enrollments
+            enrollments_sorted = sorted(enrollments, key=lambda x: (x.student.lastName, x.student.firstName))
+            for enrollment in enrollments_sorted:
+                print(f'{enrollment.student.lastName}, {enrollment.student.firstName}')
+            success = True
+        except Exception as e:
+            print('An error occurred while listing students in section:')
+            print(e)
 def list_sections_of_student():
     student = select_student()
     for enrollment in sorted(student.enrollments):
