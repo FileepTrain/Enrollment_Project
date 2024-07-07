@@ -126,6 +126,9 @@ def list_section():
 def list_students_in_section():
     CU.list_students_in_section()
 
+def list_sections_of_student():
+    CU.list_sections_of_student()
+
 def update_department_abbreviation():
     CU.update_department_abbreviation()
 

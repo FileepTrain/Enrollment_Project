@@ -433,6 +433,11 @@ def list_students_in_section():
     for enrollment in section.enrollments:
         print(f'{enrollment.studentFirstName} {enrollment.studentLastName}')
 
+def list_sections_of_student():
+    student = select_student()
+    for enrollment in student.enrollments:
+        print(f'{enrollment.departmentAbbreviation} {enrollment.courseNumber} Section {enrollment.sectionNumber} {enrollment.sectionYear} {enrollment.sectionSemester}')
+
 def update_department_abbreviation():
     success: bool = False
     department: Department
