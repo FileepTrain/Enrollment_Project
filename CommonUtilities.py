@@ -186,7 +186,7 @@ def add_major():
 
 def delete_major():
     major = select_major()
-    student_count = Student.objects(major=major).count()
+    student_count = StudentMajor.objects(major=major).count()
     if student_count > 0:
         print(f"Error: This Major cannot be deleted because it has {student_count} students.")
         return
