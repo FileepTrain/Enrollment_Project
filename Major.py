@@ -24,6 +24,15 @@ class Major(Document):
         self.name = name
         self.description = description
 
+    def equals(self, other) -> bool:
+         if (self.department == other.department and
+             self.departmentAbbreviation == other.departmentAbbreviation and
+             self.name == other.name and
+             self.description == other.description):
+             return True
+         return False
+
+
     # returns a string representation of course
     def __str__(self):
         return (f"Department Abbreviation: {self.departmentAbbreviation}, Name: {self.name}, Description: {self.description}")

@@ -93,11 +93,12 @@ def add_student():
 def delete_student():
     student = select_student()
     if student.enrollments or student.studentMajors:
-        print("Error: This department cannot be deleted because it has associated majors or courses.")
+        print("Error: This student cannot be deleted because they have associated enrollments or majors.")
         return
     try:
+        student_name = f"{student.firstName} {student.lastName}"
         student.delete()
-        print(f"{student.name} has been successfully deleted.")
+        print(f"{student_name} has been successfully deleted.")
     except Exception as e:
         print('Errors deleting the student:')
         print(Utilities.print_exception(e))
@@ -177,6 +178,7 @@ def add_major():
                 department.add_major(new_major)  # Add this Course to the Department's MongoDB list of items.
                 department.save()
                 success = True
+                print(f"Department {new_major.name} has been successfully added.")
             except Exception as e:
                 print('Errors storing the new major:')
                 print(Utilities.print_exception(e))

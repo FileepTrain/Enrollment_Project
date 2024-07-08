@@ -12,7 +12,6 @@ menu_main = Menu('main', 'Please select one of the following options:', [
     Option("Add new instance", "add()"),
     Option("Delete existing instance", "delete()"),
     Option("List existing instances", "list_members()"),
-    Option("Select existing instance", "select()"),
     Option("Update existing instance", "update()"),
     Option("Exit", "pass")
 ])
