@@ -178,7 +178,7 @@ def add_major():
                 department.add_major(new_major)  # Add this Course to the Department's MongoDB list of items.
                 department.save()
                 success = True
-                print(f"Department {new_major.name} has been successfully added.")
+                print(f"The major {new_major.name} has been successfully added.")
             except Exception as e:
                 print('Errors storing the new major:')
                 print(Utilities.print_exception(e))
